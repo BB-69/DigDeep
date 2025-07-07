@@ -3,9 +3,17 @@ using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
-    public static UnityAction OnLevelStart;
+    public static GameManager instance{ get; private set; }
+    public int Level;
+    public static UnityAction OnLevelStart; //call from checkpoint
     [SerializeField] float timeLimit;
     [SerializeField] float currentTime = 0;
+    void Awake()
+    {
+        if (instance == null) instance = this;
+        else { Destroy(this.gameObject); }
+        DontDestroyOnLoad(gameObject);  
+    }
     void Start()
     {
 

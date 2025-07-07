@@ -12,6 +12,8 @@ public class DungeonManager : MonoBehaviour
     TileLib tileLib;
     bool[,] grid;
     [SerializeField] GameObject pointVisualization;
+    [SerializeField] GameObject checkpointGO;
+    [SerializeField] GameObject playerGO;
     [Header("TILE")]
     [SerializeField] Tilemap tilemap;
     [SerializeField] TileBase emptySpace;
@@ -20,16 +22,10 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
+    bool isFirstTimeGenerate = true;
     [ContextMenu("Regenerate Cave")]
     public void Regenerate()
     {
-#if UNITY_EDITOR
-        // Clear old tiles
-        foreach (Transform child in tilemap.gameObject.transform)
-        {
-            tilemap.SetTile(new Vector3Int(Mathf.FloorToInt(child.position.x), Mathf.FloorToInt(child.position.y), Mathf.FloorToInt(child.position.z)), null);
-        }
-
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -37,7 +33,6 @@ public class DungeonManager : MonoBehaviour
 
         // Regenerate and place
         GenerateSetup();
-#endif
     }
     void Awake()
     {
@@ -52,18 +47,45 @@ public class DungeonManager : MonoBehaviour
         GenerateSetup();
     }
 
-#region DUNGEON SETUP
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Regenerate();
+        }
+    }
+
+    #region DUNGEON SETUP
     void GenerateSetup()
     {
         blocks.Clear();
-        grid = new bool[size.x, size.y];
+        bool[,] tempGrid = new bool[size.x, size.y];
+
+        //get 5 random position equally separated
         Vector2Int[] startingPoints = GetStartingPoints(size);
         foreach (var point in startingPoints)
         {
-            StartGenerate(grid, Random.Range(minSteps, maxSteps) * 100, point);
+            StartGenerate(tempGrid, Random.Range(minSteps, maxSteps) * 100, point);
         }
-        PlaceTileset(grid);
+
+        //random player position from starting points
+        int playerPosIndex = Random.Range(0, 5);
+        //instantiate checkpoint on each starting point and mark the one player spawned as spawnpoint
+
+        // for (int i = 0; i < startingPoints.Length; i++)
+        // {
+        //     var go = Instantiate(checkpointGO, new Vector3(startingPoints[i].x, startingPoints[i].y, 0), Quaternion.identity);
+        //     if (i == playerPosIndex)
+        //     {
+        //         go.GetComponent<Checkpoint>().isSpawnpoint = true;
+        //         go.GetComponent<Checkpoint>().visited = true;
+        //     }
+        // }
+        
+        //place tile
+        PlaceTileset(tempGrid);
         PlacePoints(startingPoints);
+        //Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
     }
 
     Vector2Int[] GetStartingPoints(Vector2Int gridSize, int margin = 5)
@@ -122,6 +144,7 @@ public class DungeonManager : MonoBehaviour
 
     bool IsInMargin(Vector2Int pos, Vector2Int size, int baseMargin = 5)
     {
+        //make the edge more natural with perlin noise
         float noise = Mathf.PerlinNoise(pos.x * 0.03f, pos.y * 0.03f);
         int margin = baseMargin + Mathf.FloorToInt(noise * 2f); // 5–7
 
@@ -129,27 +152,40 @@ public class DungeonManager : MonoBehaviour
                pos.y >= margin && pos.y < size.y - margin;
     }
 
-
     void PlaceTileset(bool[,] grid)
     {
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                TileBase tile;
+                TileBase tile = GetTileFromBool(grid[x, y]);
                 if (grid[x, y] == true)
                 {
-                    tile = emptySpace;
-                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: false, 10);
+                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: false);
                 }
                 else
                 {
-                    tile = caveWall;
-                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: true);
+                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: true, 10);
                 }
-                tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+                if (isFirstTimeGenerate)
+                {
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+                }
+                else
+                {
+                    if (this.grid[x, y] == grid[x, y]) continue;
+                    else { tilemap.SetTile(new Vector3Int(x, y, 0), tile); }
+                }
             }
         }
+        this.grid = grid;
+        isFirstTimeGenerate = false;
+    }
+
+    TileBase GetTileFromBool(bool tileState)
+    {
+        if (tileState == true) return emptySpace;
+        else return caveWall;
     }
 
     void PlacePoints(Vector2Int[] points)
@@ -166,10 +202,11 @@ public class DungeonManager : MonoBehaviour
 
     public void DigTile(Vector3Int position)
     {
+        // normal tile has 85% chance to drop items
         if (blocks.TryGetValue(position, out var tile))
         {
             Debug.Log("tile found type: " + tile.blockType.ToString());
-
+            this.grid[position.x, position.y] = false;
             blocks[position].canDig = false;
             if (tile.blockType == BlockType.Normal)
             {
@@ -213,6 +250,7 @@ public class DungeonManager : MonoBehaviour
     {
         //TODO: Drop ore
         if (blockType == BlockType.Normal) return;
+        Debug.Log(blockType.ToString());
     }
 
     public void SetTile(Vector3Int position, string tileName)
