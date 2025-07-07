@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class DungeonGenerator : MonoBehaviour
 {
     [SerializeField] GameObject pointVisualization;
-    [SerializeField] GameObject emptySpace;
-    [SerializeField] GameObject caveWall;
+    [SerializeField] Tilemap tilemap;
+    [SerializeField] TileBase emptySpace;
+    [SerializeField] TileBase caveWall;
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
@@ -14,13 +16,18 @@ public class DungeonGenerator : MonoBehaviour
     {
 #if UNITY_EDITOR
         // Clear old tiles
+        foreach (Transform child in tilemap.gameObject.transform)
+        {
+            tilemap.SetTile(new Vector3Int(Mathf.FloorToInt(child.position.x), Mathf.FloorToInt(child.position.y),Mathf.FloorToInt(child.position.z)), null);
+        }
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
         // Regenerate and place
-        GenerateSetup();
+            GenerateSetup();
 #endif
     }
     void Awake()
@@ -105,16 +112,15 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    bool IsInMargin(Vector2Int pos, Vector2Int size, int margin = 5)
+    bool IsInMargin(Vector2Int pos, Vector2Int size, int baseMargin = 5)
     {
-        float noiseX = Mathf.PerlinNoise(pos.x * 0.1f, 0f);
-        float noiseY = Mathf.PerlinNoise(pos.y * 0.1f, 0f);
+        float noise = Mathf.PerlinNoise(pos.x * 0.03f, pos.y * 0.03f);
+        int margin = baseMargin + Mathf.FloorToInt(noise * 2f); // 5–7
 
-        int marginX = margin + Mathf.FloorToInt(noiseX * 5f);
-        int marginY = margin + Mathf.FloorToInt(noiseY * 5f);
-
-        return pos.x >= marginX && pos.x < size.x - marginX && pos.y >= marginY && pos.y < size.y - marginY;
+        return pos.x >= margin && pos.x < size.x - margin &&
+               pos.y >= margin && pos.y < size.y - margin;
     }
+
 
     void PlaceTileset(bool[,] grid)
     {
@@ -122,8 +128,8 @@ public class DungeonGenerator : MonoBehaviour
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                GameObject prefab = grid[x, y] ? emptySpace : caveWall;
-                Instantiate(prefab, new Vector3(x, y, 0), Quaternion.identity, this.transform);
+                TileBase tile = grid[x, y] ? emptySpace : caveWall;
+                tilemap.SetTile(new Vector3Int(x,y,0), tile);
             }
         }
     }
