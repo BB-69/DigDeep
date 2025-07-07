@@ -1,13 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-
-public class DungeonGenerator : MonoBehaviour
+public class DungeonManager : MonoBehaviour
 {
+    /// <summary>
+    /// grid -> use to determine the occupied position
+    /// blocks dict -> use to check if its diggable & return the type of that block
+    /// </summary>
+    public static DungeonManager instance { get; private set; }
+    public Dictionary<Vector3Int, BlockData> blocks { get; private set; } = new Dictionary<Vector3Int, BlockData>();
+    TileLib tileLib;
+    bool[,] grid;
     [SerializeField] GameObject pointVisualization;
+    [Header("TILE")]
     [SerializeField] Tilemap tilemap;
     [SerializeField] TileBase emptySpace;
     [SerializeField] TileBase caveWall;
+    [Header("Dungeon Customization")]
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
@@ -18,7 +27,7 @@ public class DungeonGenerator : MonoBehaviour
         // Clear old tiles
         foreach (Transform child in tilemap.gameObject.transform)
         {
-            tilemap.SetTile(new Vector3Int(Mathf.FloorToInt(child.position.x), Mathf.FloorToInt(child.position.y),Mathf.FloorToInt(child.position.z)), null);
+            tilemap.SetTile(new Vector3Int(Mathf.FloorToInt(child.position.x), Mathf.FloorToInt(child.position.y), Mathf.FloorToInt(child.position.z)), null);
         }
 
         foreach (Transform child in transform)
@@ -27,11 +36,14 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // Regenerate and place
-            GenerateSetup();
+        GenerateSetup();
 #endif
     }
     void Awake()
     {
+        if (instance == null) instance = this;
+        else { Destroy(this.gameObject); }
+        tileLib = GetComponent<TileLib>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -40,9 +52,11 @@ public class DungeonGenerator : MonoBehaviour
         GenerateSetup();
     }
 
+#region DUNGEON SETUP
     void GenerateSetup()
     {
-        bool[,] grid = new bool[size.x, size.y];
+        blocks.Clear();
+        grid = new bool[size.x, size.y];
         Vector2Int[] startingPoints = GetStartingPoints(size);
         foreach (var point in startingPoints)
         {
@@ -50,12 +64,6 @@ public class DungeonGenerator : MonoBehaviour
         }
         PlaceTileset(grid);
         PlacePoints(startingPoints);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     Vector2Int[] GetStartingPoints(Vector2Int gridSize, int margin = 5)
@@ -128,18 +136,94 @@ public class DungeonGenerator : MonoBehaviour
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                TileBase tile = grid[x, y] ? emptySpace : caveWall;
-                tilemap.SetTile(new Vector3Int(x,y,0), tile);
+                TileBase tile;
+                if (grid[x, y] == true)
+                {
+                    tile = emptySpace;
+                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: false, 10);
+                }
+                else
+                {
+                    tile = caveWall;
+                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: true);
+                }
+                tilemap.SetTile(new Vector3Int(x, y, 0), tile);
             }
         }
     }
 
     void PlacePoints(Vector2Int[] points)
     {
+#if UNITY_EDITOR
         foreach (Vector2Int point in points)
         {
             Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
         }
+#endif
     }
 
+    #endregion
+
+    public void DigTile(Vector3Int position)
+    {
+        if (blocks.TryGetValue(position, out var tile))
+        {
+            Debug.Log("tile found type: " + tile.blockType.ToString());
+
+            blocks[position].canDig = false;
+            if (tile.blockType == BlockType.Normal)
+            {
+                CalculateItemDrop();
+            }
+            else
+            {
+                DropItem(tile.blockType);
+            }
+
+            tilemap.SetTile(position, tileLib.GetTile("Empty"));
+        }
+        else
+        {
+            Debug.LogWarning("Position not found");
+        }
+    }
+
+    void CalculateItemDrop()
+    {
+        int dropChance = Random.Range(0, 100);
+        if (dropChance >= 90)
+        {
+            int weight = Random.Range(0, 100);
+            if (weight <= 80)
+            {
+                DropItem(BlockType.Copper);
+            }
+            else if (weight <= 95)
+            {
+                DropItem(BlockType.Iron);
+            }
+            else
+            {
+                DropItem(BlockType.Gold);
+            }
+        }
+    }
+
+    void DropItem(BlockType blockType)
+    {
+        //TODO: Drop ore
+        if (blockType == BlockType.Normal) return;
+    }
+
+    public void SetTile(Vector3Int position, string tileName)
+    {
+        TileBase tile = tileLib.GetTile(tileName);
+        if (tile == null)
+        {
+            Debug.LogWarning("Tile not found.");
+            return;
+        }
+
+        tilemap.SetTile(position, tile);
+    }
 }

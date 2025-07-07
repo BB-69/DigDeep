@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public static UnityAction OnLevelStart;
     [SerializeField] float timeLimit;
+    [SerializeField] float currentTime = 0;
     void Start()
     {
 
@@ -18,13 +19,25 @@ public class GameManager : MonoBehaviour
 
     void OnEnable()
     {
-
+        OnLevelStart += OnStartLevel;
     }
 
     void OnDisable()
     {
-
+        OnLevelStart -= OnStartLevel;
     }
-    
-    
+
+    public void OnStartLevel()
+    {
+        InvokeRepeating("Countdown", 1f, 1f);
+    }
+
+    void Countdown()
+    {
+        currentTime += 1;
+        if (currentTime >= timeLimit)
+        {
+            //decrease hp
+        }
+    }
 }
