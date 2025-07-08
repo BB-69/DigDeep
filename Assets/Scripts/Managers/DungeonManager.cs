@@ -10,7 +10,7 @@ public class DungeonManager : MonoBehaviour
     public static DungeonManager instance { get; private set; }
     public Dictionary<Vector3Int, BlockData> blocks { get; private set; } = new Dictionary<Vector3Int, BlockData>();
     TileLib tileLib;
-    bool[,] grid;
+    BlockType[,] grid;
     [SerializeField] GameObject pointVisualization;
     [SerializeField] GameObject checkpointGO;
     [SerializeField] GameObject playerGO;
@@ -39,6 +39,7 @@ public class DungeonManager : MonoBehaviour
         if (instance == null) instance = this;
         else { Destroy(this.gameObject); }
         tileLib = GetComponent<TileLib>();
+        
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -59,7 +60,14 @@ public class DungeonManager : MonoBehaviour
     void GenerateSetup()
     {
         blocks.Clear();
-        bool[,] tempGrid = new bool[size.x, size.y];
+        BlockType[,] tempGrid = new BlockType[size.x, size.y];
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                tempGrid[x, y] = BlockType.Normal;
+            }
+        }
 
         //get 5 random position equally separated
         Vector2Int[] startingPoints = GetStartingPoints(size);
@@ -81,7 +89,7 @@ public class DungeonManager : MonoBehaviour
         //         go.GetComponent<Checkpoint>().visited = true;
         //     }
         // }
-        
+
         //place tile
         PlaceTileset(tempGrid);
         PlacePoints(startingPoints);
@@ -112,13 +120,13 @@ public class DungeonManager : MonoBehaviour
     }
 
 
-    void StartGenerate(bool[,] grid, int steps, Vector2Int startingPoint)
+    void StartGenerate(BlockType[,] grid, int steps, Vector2Int startingPoint)
     {
         //Setup
         List<Vector2Int> movements = new List<Vector2Int>() { Vector2Int.down, Vector2Int.left, Vector2Int.right, Vector2Int.up };
 
         Vector2Int currentPosition = startingPoint;
-        grid[currentPosition.x, currentPosition.y] = true;
+        grid[currentPosition.x, currentPosition.y] = BlockType.Empty;
 
         //Start random process
         for (int i = 0; i < steps; i++)
@@ -138,7 +146,18 @@ public class DungeonManager : MonoBehaviour
 
             Vector2Int chosenMove = validMoves[Random.Range(0, validMoves.Count)];
             currentPosition += chosenMove;
-            grid[currentPosition.x, currentPosition.y] = true;
+            grid[currentPosition.x, currentPosition.y] = BlockType.Empty;
+        }
+
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < grid.GetLength(1); y++)
+            {
+                if (grid[x, y] == BlockType.Normal)
+                {
+                    grid[x, y] = TryGenerateOre(5f, 2f, 1f, .2f);
+                }
+            }
         }
     }
 
@@ -152,21 +171,45 @@ public class DungeonManager : MonoBehaviour
                pos.y >= margin && pos.y < size.y - margin;
     }
 
-    void PlaceTileset(bool[,] grid)
+    void PlaceTileset(BlockType[,] grid)
     {
+        Dictionary<BlockType, TileBase> tileCache = new()
+    {
+        [BlockType.Empty] = tileLib.GetTile("Empty"),
+        [BlockType.Normal] = tileLib.GetTile("Wall"),
+        [BlockType.Copper] = tileLib.GetTile("CopperOre"),
+        [BlockType.Iron] = tileLib.GetTile("IronOre"),
+        [BlockType.Gold] = tileLib.GetTile("GoldOre"),
+        [BlockType.Emerald] = tileLib.GetTile("EmeraldOre")
+    };
+
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                TileBase tile = GetTileFromBool(grid[x, y]);
-                if (grid[x, y] == true)
+                TileBase tile = tileCache[grid[x, y]];
+                switch (grid[x, y])
                 {
-                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: false);
+                    case BlockType.Empty:
+                        blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Empty, canDig: false);
+                        break;
+                    case BlockType.Normal:
+                        blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: true, 10);
+                        break;
+                    case BlockType.Copper:
+                        blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Copper, canDig: true, 25);
+                        break;
+                    case BlockType.Iron:
+                        blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Iron, canDig: true, 40);
+                        break;
+                    case BlockType.Gold:
+                        blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Gold, canDig: true, 60);
+                        break;
+                    case BlockType.Emerald:
+                        blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Emerald, canDig: true, 100);
+                        break;
                 }
-                else
-                {
-                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: true, 10);
-                }
+
                 if (isFirstTimeGenerate)
                 {
                     tilemap.SetTile(new Vector3Int(x, y, 0), tile);
@@ -176,16 +219,62 @@ public class DungeonManager : MonoBehaviour
                     if (this.grid[x, y] == grid[x, y]) continue;
                     else { tilemap.SetTile(new Vector3Int(x, y, 0), tile); }
                 }
+
             }
+
         }
         this.grid = grid;
         isFirstTimeGenerate = false;
     }
 
-    TileBase GetTileFromBool(bool tileState)
+
+
+    public BlockType TryGenerateOre(float copperChance, float ironChance, float goldChance, float emeraldChance)
     {
-        if (tileState == true) return emptySpace;
-        else return caveWall;
+
+        // Randomly generate ores around the block
+        float oreChance = Random.Range(0f, 100f); // 0 to 100
+        float emeraldThreshold = emeraldChance;
+        float goldThreshold = emeraldThreshold + goldChance;
+        float ironThreshold = goldThreshold + ironChance;
+        float copperThreshold = ironThreshold + copperChance;
+
+        if (oreChance < emeraldThreshold)
+        {
+            return BlockType.Emerald;
+        }
+        else if (oreChance < goldThreshold)
+        {
+            return BlockType.Gold;
+        }
+        else if (oreChance < ironThreshold)
+        {
+            return BlockType.Iron;
+        }
+        else if (oreChance < copperThreshold)
+        {
+            return BlockType.Copper;
+        }
+        else
+        {
+            return BlockType.Normal; // No ore generated
+        }
+
+
+    }
+
+    TileBase GetTile(BlockType blockType)
+    {
+        return blockType switch
+        {
+            BlockType.Empty => tileLib.GetTile("Empty"),
+            BlockType.Normal => tileLib.GetTile("Wall"),
+            BlockType.Copper => tileLib.GetTile("CopperOre"),
+            BlockType.Iron => tileLib.GetTile("IronOre"),
+            BlockType.Gold => tileLib.GetTile("GoldOre"),
+            BlockType.Emerald => tileLib.GetTile("EmeraldOre"),
+            _ => null,
+        };
     }
 
     void PlacePoints(Vector2Int[] points)
@@ -205,8 +294,7 @@ public class DungeonManager : MonoBehaviour
         // normal tile has 85% chance to drop items
         if (blocks.TryGetValue(position, out var tile))
         {
-            Debug.Log("tile found type: " + tile.blockType.ToString());
-            this.grid[position.x, position.y] = false;
+            this.grid[position.x, position.y] = BlockType.Empty;
             blocks[position].canDig = false;
             if (tile.blockType == BlockType.Normal)
             {
