@@ -1,25 +1,45 @@
 using System;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class InventoryManager : MonoBehaviour
 {
     public InventorySlot[] inventorySlots;
+
+    public bool isOnCheckpoint = true;
+   
     public GameObject inventoryItemPrefab;
-    public bool isOnCheckpoint;
-    public void AddItem(DropItem dropItem)
+    
+    public bool AddItem(DropItem dropItem)
     {
+        if (isOnCheckpoint == true) {
+            for (int i = 0; i < 24; i++)
+            {
+                InventorySlot slot = inventorySlots[i];
+                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
+                if (itemInSlot == null)
+                {
+                    SpawnNewItem(dropItem, slot);
+                    return true;
+                }
+            }
+
+        }
         //find empty slot
-        for (int i = 0; i < inventorySlots.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
             InventorySlot slot = inventorySlots[i];
             InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
             if (itemInSlot == null)
             {
                 SpawnNewItem(dropItem, slot);
-                return;
+                return true;
             }
+
         }
+        return false;
     }
     void SpawnNewItem(DropItem dropItem, InventorySlot slot)
     {
