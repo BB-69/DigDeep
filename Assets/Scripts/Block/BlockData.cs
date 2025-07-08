@@ -1,5 +1,6 @@
 public enum BlockType
 {
+    Empty,
     Normal,
     Copper,
     Iron,

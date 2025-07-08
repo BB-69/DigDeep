@@ -334,73 +334,6 @@ Transform:
   - {fileID: 356779837}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1253677077
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1253677080}
-  - component: {fileID: 1253677079}
-  - component: {fileID: 1253677078}
-  m_Layer: 0
-  m_Name: Dungeon Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1253677078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1253677077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d7115ed122d2b42ad7f1e1d83ab5c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tiles: []
---- !u!114 &1253677079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1253677077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d348efb53d7e3d549b55f7f928617b40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pointVisualization: {fileID: 2784728680730488656, guid: 5429cc85ea46cc14ab1d4c4bf71bbe66, type: 3}
-  checkpointGO: {fileID: 2784728680730488656, guid: 5429cc85ea46cc14ab1d4c4bf71bbe66, type: 3}
-  playerGO: {fileID: 4485418065492791814, guid: 5a4783676eb58464c93db2f6511f7ddd, type: 3}
-  tilemap: {fileID: 356779839}
-  emptySpace: {fileID: 11400000, guid: c92ac406569bf884d80da0e764521da2, type: 2}
-  caveWall: {fileID: 11400000, guid: 55f22c19fe8d34a489565c2480525aa5, type: 2}
-  size: {x: 200, y: 100}
-  minSteps: 15
-  maxSteps: 35
---- !u!4 &1253677080
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1253677077}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2139928447
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,11 +471,72 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1001 &5495299460229904253
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339732563879008891, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: tilemap
+      value: 
+      objectReference: {fileID: 356779839}
+    - target: {fileID: 5724995426126546181, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: m_Name
+      value: Dungeon Manager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2139928450}
-  - {fileID: 1253677080}
+  - {fileID: 5495299460229904253}
   - {fileID: 424813910}
   - {fileID: 383606271}
