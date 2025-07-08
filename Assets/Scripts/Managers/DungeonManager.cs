@@ -1,0 +1,267 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+public class DungeonManager : MonoBehaviour
+{
+    /// <summary>
+    /// grid -> use to determine the occupied position
+    /// blocks dict -> use to check if its diggable & return the type of that block
+    /// </summary>
+    public static DungeonManager instance { get; private set; }
+    public Dictionary<Vector3Int, BlockData> blocks { get; private set; } = new Dictionary<Vector3Int, BlockData>();
+    TileLib tileLib;
+    bool[,] grid;
+    [SerializeField] GameObject pointVisualization;
+    [SerializeField] GameObject checkpointGO;
+    [SerializeField] GameObject playerGO;
+    [Header("TILE")]
+    [SerializeField] Tilemap tilemap;
+    [SerializeField] TileBase emptySpace;
+    [SerializeField] TileBase caveWall;
+    [Header("Dungeon Customization")]
+    [SerializeField] Vector2Int size;
+    [SerializeField] int minSteps;
+    [SerializeField] int maxSteps;
+    bool isFirstTimeGenerate = true;
+    [ContextMenu("Regenerate Cave")]
+    public void Regenerate()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Regenerate and place
+        GenerateSetup();
+    }
+    void Awake()
+    {
+        if (instance == null) instance = this;
+        else { Destroy(this.gameObject); }
+        tileLib = GetComponent<TileLib>();
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        GenerateSetup();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Regenerate();
+        }
+    }
+
+    #region DUNGEON SETUP
+    void GenerateSetup()
+    {
+        blocks.Clear();
+        bool[,] tempGrid = new bool[size.x, size.y];
+
+        //get 5 random position equally separated
+        Vector2Int[] startingPoints = GetStartingPoints(size);
+        foreach (var point in startingPoints)
+        {
+            StartGenerate(tempGrid, Random.Range(minSteps, maxSteps) * 100, point);
+        }
+
+        //random player position from starting points
+        int playerPosIndex = Random.Range(0, 5);
+        //instantiate checkpoint on each starting point and mark the one player spawned as spawnpoint
+
+        // for (int i = 0; i < startingPoints.Length; i++)
+        // {
+        //     var go = Instantiate(checkpointGO, new Vector3(startingPoints[i].x, startingPoints[i].y, 0), Quaternion.identity);
+        //     if (i == playerPosIndex)
+        //     {
+        //         go.GetComponent<Checkpoint>().isSpawnpoint = true;
+        //         go.GetComponent<Checkpoint>().visited = true;
+        //     }
+        // }
+        
+        //place tile
+        PlaceTileset(tempGrid);
+        PlacePoints(startingPoints);
+        //Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
+    }
+
+    Vector2Int[] GetStartingPoints(Vector2Int gridSize, int margin = 5)
+    {
+        Vector2Int[] points = new Vector2Int[5];
+
+        Vector2Int[] centers = new Vector2Int[]
+        {
+        new Vector2Int(gridSize.x / 4, gridSize.y * 3 / 4),     // top left
+        new Vector2Int(gridSize.x * 3 / 4, gridSize.y * 3 / 4), // top right
+        new Vector2Int(gridSize.x / 2, gridSize.y / 2),         // center
+        new Vector2Int(gridSize.x / 4, gridSize.y / 4),         // bottom left
+        new Vector2Int(gridSize.x * 3 / 4, gridSize.y / 4),     // bottom right
+        };
+
+        for (int i = 0; i < centers.Length; i++)
+        {
+            int x = Random.Range(Mathf.Max(0, centers[i].x - margin), Mathf.Min(gridSize.x, centers[i].x + margin));
+            int y = Random.Range(Mathf.Max(0, centers[i].y - margin), Mathf.Min(gridSize.y, centers[i].y + margin));
+            points[i] = new Vector2Int(x, y);
+        }
+
+        return points;
+    }
+
+
+    void StartGenerate(bool[,] grid, int steps, Vector2Int startingPoint)
+    {
+        //Setup
+        List<Vector2Int> movements = new List<Vector2Int>() { Vector2Int.down, Vector2Int.left, Vector2Int.right, Vector2Int.up };
+
+        Vector2Int currentPosition = startingPoint;
+        grid[currentPosition.x, currentPosition.y] = true;
+
+        //Start random process
+        for (int i = 0; i < steps; i++)
+        {
+            List<Vector2Int> validMoves = new List<Vector2Int>();
+
+            foreach (var move in movements)
+            {
+                Vector2Int next = currentPosition + move;
+                if (IsInMargin(next, size))
+                {
+                    validMoves.Add(move);
+                }
+            }
+
+            if (validMoves.Count == 0) break;
+
+            Vector2Int chosenMove = validMoves[Random.Range(0, validMoves.Count)];
+            currentPosition += chosenMove;
+            grid[currentPosition.x, currentPosition.y] = true;
+        }
+    }
+
+    bool IsInMargin(Vector2Int pos, Vector2Int size, int baseMargin = 5)
+    {
+        //make the edge more natural with perlin noise
+        float noise = Mathf.PerlinNoise(pos.x * 0.03f, pos.y * 0.03f);
+        int margin = baseMargin + Mathf.FloorToInt(noise * 2f); // 5–7
+
+        return pos.x >= margin && pos.x < size.x - margin &&
+               pos.y >= margin && pos.y < size.y - margin;
+    }
+
+    void PlaceTileset(bool[,] grid)
+    {
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < grid.GetLength(1); y++)
+            {
+                TileBase tile = GetTileFromBool(grid[x, y]);
+                if (grid[x, y] == true)
+                {
+                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: false);
+                }
+                else
+                {
+                    blocks[new Vector3Int(x, y, 0)] = new BlockData(BlockType.Normal, canDig: true, 10);
+                }
+                if (isFirstTimeGenerate)
+                {
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+                }
+                else
+                {
+                    if (this.grid[x, y] == grid[x, y]) continue;
+                    else { tilemap.SetTile(new Vector3Int(x, y, 0), tile); }
+                }
+            }
+        }
+        this.grid = grid;
+        isFirstTimeGenerate = false;
+    }
+
+    TileBase GetTileFromBool(bool tileState)
+    {
+        if (tileState == true) return emptySpace;
+        else return caveWall;
+    }
+
+    void PlacePoints(Vector2Int[] points)
+    {
+#if UNITY_EDITOR
+        foreach (Vector2Int point in points)
+        {
+            Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
+        }
+#endif
+    }
+
+    #endregion
+
+    public void DigTile(Vector3Int position)
+    {
+        // normal tile has 85% chance to drop items
+        if (blocks.TryGetValue(position, out var tile))
+        {
+            Debug.Log("tile found type: " + tile.blockType.ToString());
+            this.grid[position.x, position.y] = false;
+            blocks[position].canDig = false;
+            if (tile.blockType == BlockType.Normal)
+            {
+                CalculateItemDrop();
+            }
+            else
+            {
+                DropItem(tile.blockType);
+            }
+
+            tilemap.SetTile(position, tileLib.GetTile("Empty"));
+        }
+        else
+        {
+            Debug.LogWarning("Position not found");
+        }
+    }
+
+    void CalculateItemDrop()
+    {
+        int dropChance = Random.Range(0, 100);
+        if (dropChance >= 90)
+        {
+            int weight = Random.Range(0, 100);
+            if (weight <= 80)
+            {
+                DropItem(BlockType.Copper);
+            }
+            else if (weight <= 95)
+            {
+                DropItem(BlockType.Iron);
+            }
+            else
+            {
+                DropItem(BlockType.Gold);
+            }
+        }
+    }
+
+    void DropItem(BlockType blockType)
+    {
+        //TODO: Drop ore
+        if (blockType == BlockType.Normal) return;
+        Debug.Log(blockType.ToString());
+    }
+
+    public void SetTile(Vector3Int position, string tileName)
+    {
+        TileBase tile = tileLib.GetTile(tileName);
+        if (tile == null)
+        {
+            Debug.LogWarning("Tile not found.");
+            return;
+        }
+
+        tilemap.SetTile(position, tile);
+    }
+}
