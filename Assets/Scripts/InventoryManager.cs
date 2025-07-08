@@ -9,12 +9,25 @@ public class InventoryManager : MonoBehaviour
     public InventorySlot[] inventorySlots;
 
     public bool isOnCheckpoint = true;
+    public int maxStackedItems = 20;
    
     public GameObject inventoryItemPrefab;
     
     public bool AddItem(DropItem dropItem)
     {
-        if (isOnCheckpoint == true) {
+        for (int i = 0; i < 24; i++)
+            {
+                InventorySlot slot = inventorySlots[i];
+                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
+                if (itemInSlot != null && itemInSlot.dropItem == dropItem && itemInSlot.count < maxStackedItems)
+                {
+                    itemInSlot.count++;
+                    itemInSlot.RefreshCount();
+                    return true;
+                }
+            }
+        if (isOnCheckpoint == true)
+        {
             for (int i = 0; i < 24; i++)
             {
                 InventorySlot slot = inventorySlots[i];
