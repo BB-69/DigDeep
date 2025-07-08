@@ -1805,6 +1805,7 @@ MonoBehaviour:
   - {fileID: 588386783}
   - {fileID: 1876882368}
   isOnCheckpoint: 0
+  maxStackedItems: 20
   inventoryItemPrefab: {fileID: 6915266230184922179, guid: 3fa3bb4b37fc2164c97f9c3698caa838, type: 3}
 --- !u!4 &1087129327
 Transform:

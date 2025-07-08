@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,14 +9,22 @@ public class InventoryItem : MonoBehaviour , IBeginDragHandler , IDragHandler , 
 
     [Header("UI")]
     public Image image;
+    public TextMeshProUGUI countText;
     [HideInInspector] public Transform parentAfterDrag;
-    public DropItem dropItem;
+    [HideInInspector] public int count = 1;
+    [HideInInspector] public DropItem dropItem;
 
-    
+
     public void InitialiseItem(DropItem newItem)
     {
-        dropItem =  newItem;
+        dropItem = newItem;
         image.sprite = newItem.image;
+        RefreshCount();
+    }
+
+    public void RefreshCount()
+    {
+        countText.text = count.ToString();
     }
   //startdrag
     public void OnBeginDrag(PointerEventData eventData)
