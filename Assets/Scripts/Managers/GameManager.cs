@@ -1,13 +1,14 @@
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance{ get; private set; }
-    public int Level;
     public static UnityAction OnLevelStart; //call from checkpoint
-    [SerializeField] float timeLimit;
-    [SerializeField] float currentTime = 0;
+    public int level = 0;
+    public bool isStarted;
+    [SerializeField] float timer = 0;
     void Awake()
     {
         if (instance == null) instance = this;
@@ -16,36 +17,52 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-
+        ChangeToNextLevel();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (isStarted)
+        {
+            timer += Time.deltaTime;
+        }
     }
 
     void OnEnable()
     {
-        OnLevelStart += OnStartLevel;
     }
 
     void OnDisable()
     {
-        OnLevelStart -= OnStartLevel;
     }
 
-    public void OnStartLevel()
+    public void OnLevelCleared()
     {
-        InvokeRepeating("Countdown", 1f, 1f);
+        isStarted = false;
+        Debug.Log(timer);
+        timer = 0;
+        //do something before go to next level
+        ChangeToNextLevel();
     }
 
-    void Countdown()
+    public void ChangeToNextLevel()
     {
-        currentTime += 1;
-        if (currentTime >= timeLimit)
+        level++;
+        if (level < 3)
         {
-            //decrease hp
+            DungeonManager.instance.SetValue(); //default
         }
+        else if (level < 6)
+        {
+            DungeonManager.instance.SetValue(6f, 2f, .5f, 0);
+        }
+        else
+        {
+            DungeonManager.instance.SetValue(5f, 3f, 1f, .5f);
+        }
+
+        DungeonManager.instance.Regenerate();
+        isStarted = true;
     }
 }
