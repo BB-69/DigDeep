@@ -26,6 +26,7 @@ public class InventoryManager : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log("Updating");
         if (Input.inputString != null)
         {
             bool isNumber = int.TryParse(Input.inputString, out int number);

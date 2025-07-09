@@ -14,5 +14,9 @@ public class DropItem : ScriptableObject
     public bool stackAble;
     [Header("Both")]
     public Sprite image;
+    [Header("Item Info")]
+    public string itemName;
+    [TextArea]
+    public string description;
 
 }

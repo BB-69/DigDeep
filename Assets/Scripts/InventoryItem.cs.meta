@@ -5,8 +5,12 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - image: {instanceID: 0}
+  - countText: {instanceID: 0}
   - parentAfterDrag: {instanceID: 0}
   - dropItem: {instanceID: 0}
+  - tooltipPanel: {fileID: 1903534533746270663, guid: f8da559227a4cb4428df1e394e866de1, type: 3}
+  - nameText: {instanceID: 0}
+  - descriptionText: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
