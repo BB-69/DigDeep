@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 1113860836360109796}
   - component: {fileID: 4947147826110249937}
   - component: {fileID: 4369066687189619694}
-  m_Layer: 0
+  - component: {fileID: 3185843116956572171}
+  m_Layer: 6
   m_Name: TestItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -5244482664123065748, guid: 1b39c0fe73f0433468e25eb21cfde7c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,7 +99,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354178582839232223}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -116,7 +117,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 2
 --- !u!61 &4947147826110249937
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -147,7 +148,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -175,4 +176,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d134dd316b81b22499093e52f09d9227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropForce: 5
+  sr: {fileID: 5003253197347906506}
+  colliders: {fileID: 4947147826110249937}
+  moveSpeed: 7
+  attractRadius: 3
+  collectDistance: 0.3
+  dropItem: {fileID: 11400000, guid: 158582328c744c94fbbaa73c4d12350e, type: 2}
+--- !u!114 &3185843116956572171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354178582839232223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7741cff99c39ac444a7f8c0a529c0174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatAmount: 0.1
+  floatSpeed: 2

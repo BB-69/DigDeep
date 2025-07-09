@@ -7,6 +7,7 @@ using UnityEngine.Rendering.Universal;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager instance;
     public InventorySlot[] inventorySlots;
 
     public bool isOnCheckpoint = true;
@@ -14,9 +15,14 @@ public class InventoryManager : MonoBehaviour
 
     public GameObject inventoryItemPrefab;
     int selectedSlot = -1;
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         ChangeSelectedSlot(0);
+
     }
     private void Update()
     {
@@ -83,6 +89,7 @@ public class InventoryManager : MonoBehaviour
     }
     void SpawnNewItem(DropItem dropItem, InventorySlot slot)
     {
+        Debug.Log(dropItem);
         GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform);
         InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
         inventoryItem.InitialiseItem(dropItem);
