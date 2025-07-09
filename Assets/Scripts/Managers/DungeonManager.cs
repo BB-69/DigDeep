@@ -22,6 +22,7 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
+    [SerializeField] float copperChance, ironChance, goldChance, emeraldChance;
     bool isFirstTimeGenerate = true;
     [ContextMenu("Regenerate Cave")]
     public void Regenerate()
@@ -45,18 +46,21 @@ public class DungeonManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GenerateSetup();
+        //GenerateSetup();
     }
 
     void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Regenerate();
-        }
-    }
+    {    }
 
     #region DUNGEON SETUP
+    public void SetValue(float copperChance=5f, float ironChance=2f, float goldChance=0f, float emeraldChance=0f)
+    {
+        this.copperChance = copperChance;
+        this.ironChance = ironChance;
+        this.goldChance = goldChance;
+        this.emeraldChance = emeraldChance;
+    }
+
     void GenerateSetup()
     {
         blocks.Clear();
@@ -86,7 +90,7 @@ public class DungeonManager : MonoBehaviour
         //     if (i == playerPosIndex)
         //     {
         //         go.GetComponent<Checkpoint>().isSpawnpoint = true;
-        //         go.GetComponent<Checkpoint>().visited = true;
+        //         go.GetComponent<Checkpoint>().cleared = true;
         //     }
         // }
 
@@ -155,7 +159,7 @@ public class DungeonManager : MonoBehaviour
             {
                 if (grid[x, y] == BlockType.Normal)
                 {
-                    grid[x, y] = TryGenerateOre(5f, 2f, 1f, .2f);
+                    grid[x, y] = TryGenerateOre();
                 }
             }
         }
@@ -229,9 +233,8 @@ public class DungeonManager : MonoBehaviour
 
 
 
-    public BlockType TryGenerateOre(float copperChance, float ironChance, float goldChance, float emeraldChance)
+    public BlockType TryGenerateOre()
     {
-
         // Randomly generate ores around the block
         float oreChance = Random.Range(0f, 100f); // 0 to 100
         float emeraldThreshold = emeraldChance;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Emerald
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 0}
-  m_DefaultGameObject: {fileID: 5895376496506273140, guid: a6f70194729cc0e4890ef8fe758b6f65, type: 3}
+  m_DefaultGameObject: {fileID: 24700075289228736, guid: be8f94b538f2e2446990a6fdcd38f844, type: 3}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
