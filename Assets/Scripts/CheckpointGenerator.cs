@@ -28,8 +28,9 @@ public class CheckpointGenerator : MonoBehaviour
 
         foreach (int count in oreCounts)
         {
+            int need = Mathf.FloorToInt(count * 0.7f);
             int[] parts = new int[4]; // default is [0,0,0,0]
-            int remaining = count;
+            int remaining = need;
 
             for (int i = 0; i < 3; i++)
             {
