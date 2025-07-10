@@ -271,9 +271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523d316636a10404c971e96e9c7681ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: 0
-  timeLimit: 0
-  currentTime: 0
+  checkpointPassed: 0
+  level: 1
+  isStarted: 0
+  timer: 0
 --- !u!4 &383606271
 Transform:
   m_ObjectHideFlags: 0
@@ -520,9 +521,33 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: size.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: size.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
       propertyPath: tilemap
       value: 
       objectReference: {fileID: 356779839}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: maxSteps
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: minSteps
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: ironChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: copperChance
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5724995426126546181, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
       propertyPath: m_Name
       value: Dungeon Manager
@@ -530,8 +555,29 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5724995426126546181, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5495299460229904255}
   m_SourcePrefab: {fileID: 100100000, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+--- !u!1 &5495299460229904254 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5724995426126546181, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+  m_PrefabInstance: {fileID: 5495299460229904253}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5495299460229904255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5495299460229904254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9358ee94d1e7d443ab51a5c3e3907a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointGO: {fileID: 2784728680730488656, guid: 5429cc85ea46cc14ab1d4c4bf71bbe66, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

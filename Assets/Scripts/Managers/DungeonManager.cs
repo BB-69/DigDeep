@@ -10,22 +10,28 @@ public class DungeonManager : MonoBehaviour
     public static DungeonManager instance { get; private set; }
     public Dictionary<Vector3Int, BlockData> blocks { get; private set; } = new Dictionary<Vector3Int, BlockData>();
     TileLib tileLib;
+    CheckpointGenerator checkpointGenerator;
     BlockType[,] grid;
     [SerializeField] GameObject pointVisualization;
-    [SerializeField] GameObject checkpointGO;
     [SerializeField] GameObject playerGO;
     [Header("TILE")]
     [SerializeField] Tilemap tilemap;
-    [SerializeField] TileBase emptySpace;
-    [SerializeField] TileBase caveWall;
     [Header("Dungeon Customization")]
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
+    [SerializeField] float copperChance, ironChance, goldChance, emeraldChance;
+    int copperCount, ironCount, goldCount, emeraldCount =0;
     bool isFirstTimeGenerate = true;
     [ContextMenu("Regenerate Cave")]
     public void Regenerate()
     {
+        blocks.Clear();
+        copperCount = 0;
+        ironCount = 0;
+        goldCount = 0;
+        emeraldCount = 0;
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -39,27 +45,21 @@ public class DungeonManager : MonoBehaviour
         if (instance == null) instance = this;
         else { Destroy(this.gameObject); }
         tileLib = GetComponent<TileLib>();
+        checkpointGenerator = GetComponent<CheckpointGenerator>();
         
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        GenerateSetup();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Regenerate();
-        }
-    }
-
     #region DUNGEON SETUP
+    public void SetValue(float copperChance=5f, float ironChance=2f, float goldChance=0f, float emeraldChance=0f)
+    {
+        this.copperChance = copperChance;
+        this.ironChance = ironChance;
+        this.goldChance = goldChance;
+        this.emeraldChance = emeraldChance;
+    }
+
     void GenerateSetup()
     {
-        blocks.Clear();
         BlockType[,] tempGrid = new BlockType[size.x, size.y];
         for (int x = 0; x < size.x; x++)
         {
@@ -70,7 +70,7 @@ public class DungeonManager : MonoBehaviour
         }
 
         //get 5 random position equally separated
-        Vector2Int[] startingPoints = GetStartingPoints(size);
+        List<Vector2Int> startingPoints = GetStartingPoints(size);
         foreach (var point in startingPoints)
         {
             StartGenerate(tempGrid, Random.Range(minSteps, maxSteps) * 100, point);
@@ -78,27 +78,20 @@ public class DungeonManager : MonoBehaviour
 
         //random player position from starting points
         int playerPosIndex = Random.Range(0, 5);
-        //instantiate checkpoint on each starting point and mark the one player spawned as spawnpoint
-
-        // for (int i = 0; i < startingPoints.Length; i++)
-        // {
-        //     var go = Instantiate(checkpointGO, new Vector3(startingPoints[i].x, startingPoints[i].y, 0), Quaternion.identity);
-        //     if (i == playerPosIndex)
-        //     {
-        //         go.GetComponent<Checkpoint>().isSpawnpoint = true;
-        //         go.GetComponent<Checkpoint>().visited = true;
-        //     }
-        // }
-
+        startingPoints.RemoveAt(playerPosIndex);
         //place tile
         PlaceTileset(tempGrid);
-        PlacePoints(startingPoints);
-        //Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
+        Debug.Log(copperCount);
+        Debug.Log(ironCount);
+        Debug.Log(goldCount);
+        Debug.Log(emeraldCount);
+        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[]{copperCount, ironCount, goldCount, emeraldCount});
+        Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
     }
 
-    Vector2Int[] GetStartingPoints(Vector2Int gridSize, int margin = 5)
+    List<Vector2Int> GetStartingPoints(Vector2Int gridSize, int margin = 5)
     {
-        Vector2Int[] points = new Vector2Int[5];
+        List<Vector2Int> points = new List<Vector2Int>();
 
         Vector2Int[] centers = new Vector2Int[]
         {
@@ -113,7 +106,7 @@ public class DungeonManager : MonoBehaviour
         {
             int x = Random.Range(Mathf.Max(0, centers[i].x - margin), Mathf.Min(gridSize.x, centers[i].x + margin));
             int y = Random.Range(Mathf.Max(0, centers[i].y - margin), Mathf.Min(gridSize.y, centers[i].y + margin));
-            points[i] = new Vector2Int(x, y);
+            points.Add(new Vector2Int(x, y));
         }
 
         return points;
@@ -155,7 +148,7 @@ public class DungeonManager : MonoBehaviour
             {
                 if (grid[x, y] == BlockType.Normal)
                 {
-                    grid[x, y] = TryGenerateOre(5f, 2f, 1f, .2f);
+                    grid[x, y] = TryGenerateOre();
                 }
             }
         }
@@ -229,9 +222,8 @@ public class DungeonManager : MonoBehaviour
 
 
 
-    public BlockType TryGenerateOre(float copperChance, float ironChance, float goldChance, float emeraldChance)
+    public BlockType TryGenerateOre()
     {
-
         // Randomly generate ores around the block
         float oreChance = Random.Range(0f, 100f); // 0 to 100
         float emeraldThreshold = emeraldChance;
@@ -241,18 +233,22 @@ public class DungeonManager : MonoBehaviour
 
         if (oreChance < emeraldThreshold)
         {
+            emeraldCount++;
             return BlockType.Emerald;
         }
         else if (oreChance < goldThreshold)
         {
+            goldCount++;
             return BlockType.Gold;
         }
         else if (oreChance < ironThreshold)
         {
+            ironCount++;
             return BlockType.Iron;
         }
         else if (oreChance < copperThreshold)
         {
+            copperCount++;
             return BlockType.Copper;
         }
         else
@@ -263,28 +259,14 @@ public class DungeonManager : MonoBehaviour
 
     }
 
-    TileBase GetTile(BlockType blockType)
-    {
-        return blockType switch
-        {
-            BlockType.Empty => tileLib.GetTile("Empty"),
-            BlockType.Normal => tileLib.GetTile("Wall"),
-            BlockType.Copper => tileLib.GetTile("CopperOre"),
-            BlockType.Iron => tileLib.GetTile("IronOre"),
-            BlockType.Gold => tileLib.GetTile("GoldOre"),
-            BlockType.Emerald => tileLib.GetTile("EmeraldOre"),
-            _ => null,
-        };
-    }
-
     void PlacePoints(Vector2Int[] points)
     {
-#if UNITY_EDITOR
-        foreach (Vector2Int point in points)
-        {
-            Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
-        }
-#endif
+// #if UNITY_EDITOR
+//         foreach (Vector2Int point in points)
+//         {
+//             Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
+//         }
+// #endif
     }
 
     #endregion

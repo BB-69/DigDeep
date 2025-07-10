@@ -1,34 +1,47 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Checkpoint : MonoBehaviour
+public class Checkpoint : MonoBehaviour, IInteractable
 {
-    public bool visited = false;
+    public bool cleared = false;
     public bool isSpawnpoint = false;
-    bool isStarted = false;
+    Dictionary<string, int> oreNeeds = new Dictionary<string, int>();
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    public void Setup(int copper, int iron, int gold, int emerald)
     {
-        if (collision.CompareTag("Player"))
+        oreNeeds["copper"] = copper;
+        oreNeeds["iron"] = iron;
+        oreNeeds["gold"] = gold;
+        oreNeeds["emerald"] = emerald;
+
+        Debug.Log($"Need {oreNeeds["copper"]} {oreNeeds["iron"]} {oreNeeds["gold"]} {oreNeeds["emerald"]}");
+    }
+
+    public void Interact(PlayerTemp playerTemp)
+    {
+        if (isSpawnpoint || cleared ) return;
+        CheckIfCanPass(playerTemp.inventory);
+        //condition check if can go
+    }
+
+    void CheckIfCanPass(Inventory inventory)
+    {
+        foreach (var key in oreNeeds.Keys)
         {
-            visited = true;
+            if (!inventory.IsPlayerHasEnoughItem(key, oreNeeds[key]))
+            {
+                Debug.Log("NAHH");
+                return;
+            }
         }
-    }
 
-    public void OnTriggerExit2D(Collider2D collision)
-    {
-        if (isStarted || !isSpawnpoint) return;
-        //Start level after player exit checkpoint
-        if (collision.CompareTag("Player"))
+        foreach (var key in oreNeeds.Keys)
         {
-            isStarted = true;
-            GameManager.OnLevelStart?.Invoke();
+            inventory.RemoveItem(key, oreNeeds[key]);
         }
+        cleared = true;
+        GameManager.instance.OnCompleteCheckpoint();
     }
 
-    public void OnClickGoNextLevel()
-    {
-        if (isSpawnpoint) return;
-        GameManager.instance.Level += 1;
-    }
 }

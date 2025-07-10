@@ -1,13 +1,15 @@
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance{ get; private set; }
-    public int Level;
+    [SerializeField] int checkpointPassed =0;
     public static UnityAction OnLevelStart; //call from checkpoint
-    [SerializeField] float timeLimit;
-    [SerializeField] float currentTime = 0;
+    public int level = 0;
+    public bool isStarted;
+    [SerializeField] float timer = 0;
     void Awake()
     {
         if (instance == null) instance = this;
@@ -16,36 +18,62 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-
+        ChangeToNextLevel();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (isStarted)
+        {
+            timer += Time.deltaTime;
+        }
     }
 
     void OnEnable()
     {
-        OnLevelStart += OnStartLevel;
     }
 
     void OnDisable()
     {
-        OnLevelStart -= OnStartLevel;
     }
 
-    public void OnStartLevel()
+    public void OnCompleteCheckpoint()
     {
-        InvokeRepeating("Countdown", 1f, 1f);
-    }
-
-    void Countdown()
-    {
-        currentTime += 1;
-        if (currentTime >= timeLimit)
+        checkpointPassed++;
+        Debug.Log($"Complete {checkpointPassed} checkpoints");
+        if (checkpointPassed == 4)
         {
-            //decrease hp
+            OnLevelCleared();
         }
+    }
+
+    public void OnLevelCleared()
+    {
+        isStarted = false;
+        Debug.Log(timer);
+        timer = 0;
+        //do something before go to next level
+        ChangeToNextLevel();
+    }
+
+    public void ChangeToNextLevel()
+    {
+        level++;
+        if (level <= 3)
+        {
+            DungeonManager.instance.SetValue(); //default
+        }
+        else if (level <= 6)
+        {
+            DungeonManager.instance.SetValue(3f, 2f, .5f, 0);
+        }
+        else
+        {
+            DungeonManager.instance.SetValue(2f, 3f, 1f, .5f);
+        }
+
+        DungeonManager.instance.Regenerate();
+        isStarted = true;
     }
 }

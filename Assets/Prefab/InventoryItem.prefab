@@ -94,6 +94,11 @@ MonoBehaviour:
   parentAfterDrag: {fileID: 0}
   count: 1
   dropItem: {fileID: 11400000, guid: 3227100a45f626f49898e8ca406a014a, type: 2}
+  tooltipPanel: {fileID: 1903534533746270663, guid: f8da559227a4cb4428df1e394e866de1, type: 3}
+  nameText: {fileID: 0}
+  descriptionText: {fileID: 0}
+  itemName: emerald
+  description: this is
 --- !u!1 &7398068843025861279
 GameObject:
   m_ObjectHideFlags: 0
