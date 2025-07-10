@@ -220,7 +220,14 @@ public class DungeonManager : MonoBehaviour
         isFirstTimeGenerate = false;
     }
 
-
+    public void TakeDamageBlock(Vector3Int pos, int dmg)
+    {
+        blocks[pos].hp -= dmg;
+        if (blocks[pos].hp <= 0)
+        {
+            DigTile(pos);
+        }
+    }
 
     public BlockType TryGenerateOre()
     {
