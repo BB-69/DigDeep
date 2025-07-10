@@ -84,7 +84,6 @@ public class InventoryManager : MonoBehaviour
                 SpawnNewItem(dropItem, slot);
                 return true;
             }
-
         }
         return false;
     }
