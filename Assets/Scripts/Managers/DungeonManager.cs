@@ -10,23 +10,29 @@ public class DungeonManager : MonoBehaviour
     public static DungeonManager instance { get; private set; }
     public Dictionary<Vector3Int, BlockData> blocks { get; private set; } = new Dictionary<Vector3Int, BlockData>();
     TileLib tileLib;
+    CheckpointGenerator checkpointGenerator;
     BlockType[,] grid;
     [SerializeField] GameObject pointVisualization;
     [SerializeField] GameObject checkpointGO;
     [SerializeField] GameObject playerGO;
     [Header("TILE")]
     [SerializeField] Tilemap tilemap;
-    [SerializeField] TileBase emptySpace;
-    [SerializeField] TileBase caveWall;
     [Header("Dungeon Customization")]
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
     [SerializeField] float copperChance, ironChance, goldChance, emeraldChance;
+    int copperCount, ironCount, goldCount, emeraldCount =0;
     bool isFirstTimeGenerate = true;
     [ContextMenu("Regenerate Cave")]
     public void Regenerate()
     {
+        blocks.Clear();
+        copperCount = 0;
+        ironCount = 0;
+        goldCount = 0;
+        emeraldCount = 0;
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -40,17 +46,9 @@ public class DungeonManager : MonoBehaviour
         if (instance == null) instance = this;
         else { Destroy(this.gameObject); }
         tileLib = GetComponent<TileLib>();
+        checkpointGenerator = GetComponent<CheckpointGenerator>();
         
     }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        //GenerateSetup();
-    }
-
-    void Update()
-    {    }
 
     #region DUNGEON SETUP
     public void SetValue(float copperChance=5f, float ironChance=2f, float goldChance=0f, float emeraldChance=0f)
@@ -63,7 +61,6 @@ public class DungeonManager : MonoBehaviour
 
     void GenerateSetup()
     {
-        blocks.Clear();
         BlockType[,] tempGrid = new BlockType[size.x, size.y];
         for (int x = 0; x < size.x; x++)
         {
@@ -82,21 +79,12 @@ public class DungeonManager : MonoBehaviour
 
         //random player position from starting points
         int playerPosIndex = Random.Range(0, 5);
-        //instantiate checkpoint on each starting point and mark the one player spawned as spawnpoint
-
-        // for (int i = 0; i < startingPoints.Length; i++)
-        // {
-        //     var go = Instantiate(checkpointGO, new Vector3(startingPoints[i].x, startingPoints[i].y, 0), Quaternion.identity);
-        //     if (i == playerPosIndex)
-        //     {
-        //         go.GetComponent<Checkpoint>().isSpawnpoint = true;
-        //         go.GetComponent<Checkpoint>().cleared = true;
-        //     }
-        // }
 
         //place tile
         PlaceTileset(tempGrid);
         PlacePoints(startingPoints);
+
+        checkpointGenerator.SpawnCheckpointObject(startingPoints, playerPosIndex, new int[]{copperCount, ironCount, goldCount, emeraldCount});
         //Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
     }
 
@@ -244,18 +232,22 @@ public class DungeonManager : MonoBehaviour
 
         if (oreChance < emeraldThreshold)
         {
+            emeraldCount++;
             return BlockType.Emerald;
         }
         else if (oreChance < goldThreshold)
         {
+            goldCount++;
             return BlockType.Gold;
         }
         else if (oreChance < ironThreshold)
         {
+            ironCount++;
             return BlockType.Iron;
         }
         else if (oreChance < copperThreshold)
         {
+            copperCount++;
             return BlockType.Copper;
         }
         else
@@ -264,20 +256,6 @@ public class DungeonManager : MonoBehaviour
         }
 
 
-    }
-
-    TileBase GetTile(BlockType blockType)
-    {
-        return blockType switch
-        {
-            BlockType.Empty => tileLib.GetTile("Empty"),
-            BlockType.Normal => tileLib.GetTile("Wall"),
-            BlockType.Copper => tileLib.GetTile("CopperOre"),
-            BlockType.Iron => tileLib.GetTile("IronOre"),
-            BlockType.Gold => tileLib.GetTile("GoldOre"),
-            BlockType.Emerald => tileLib.GetTile("EmeraldOre"),
-            _ => null,
-        };
     }
 
     void PlacePoints(Vector2Int[] points)

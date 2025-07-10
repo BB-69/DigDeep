@@ -87,7 +87,6 @@ public class InventoryManager : MonoBehaviour
                 InventoryStatTracker.instance.AddItem(dropItem.itemName);
                 return true;
             }
-
         }
         return false;
     }

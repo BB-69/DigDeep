@@ -49,17 +49,17 @@ public class GameManager : MonoBehaviour
     public void ChangeToNextLevel()
     {
         level++;
-        if (level < 3)
+        if (level <= 3)
         {
             DungeonManager.instance.SetValue(); //default
         }
-        else if (level < 6)
+        else if (level <= 6)
         {
-            DungeonManager.instance.SetValue(6f, 2f, .5f, 0);
+            DungeonManager.instance.SetValue(3f, 2f, .5f, 0);
         }
         else
         {
-            DungeonManager.instance.SetValue(5f, 3f, 1f, .5f);
+            DungeonManager.instance.SetValue(2f, 3f, 1f, .5f);
         }
 
         DungeonManager.instance.Regenerate();
