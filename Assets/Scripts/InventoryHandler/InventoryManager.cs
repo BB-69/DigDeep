@@ -49,7 +49,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool AddItem(DropItem dropItem)
     {
-        for (int i = 0; i < 24; i++)
+        for (int i = 0; i < 6; i++)
         {
             InventorySlot slot = inventorySlots[i];
             InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
@@ -57,10 +57,12 @@ public class InventoryManager : MonoBehaviour
             {
                 itemInSlot.count++;
                 itemInSlot.RefreshCount();
+                InventoryStatTracker.instance.AddItem(dropItem.itemName);
+
                 return true;
             }
         }
-        if (isOnCheckpoint == true)
+       /* if (isOnCheckpoint == true)
         {
             for (int i = 0; i < 24; i++)
             {
@@ -73,7 +75,7 @@ public class InventoryManager : MonoBehaviour
                 }
             }
 
-        }
+        }*/
         //find empty slot
         for (int i = 0; i < 6; i++)
         {
@@ -82,6 +84,7 @@ public class InventoryManager : MonoBehaviour
             if (itemInSlot == null)
             {
                 SpawnNewItem(dropItem, slot);
+                InventoryStatTracker.instance.AddItem(dropItem.itemName);
                 return true;
             }
         }
@@ -93,6 +96,7 @@ public class InventoryManager : MonoBehaviour
         GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform);
         InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
         inventoryItem.InitialiseItem(dropItem);
+    
     }
 
     public DropItem GetSelectedItem(bool use)
@@ -105,6 +109,8 @@ public class InventoryManager : MonoBehaviour
             if (use == true)
             {
                 itemInSlot.count--;
+                InventoryStatTracker.instance.RemoveItem(item.itemName);
+
                 if (itemInSlot.count <= 0)
                 {
                     Destroy(itemInSlot.gameObject);

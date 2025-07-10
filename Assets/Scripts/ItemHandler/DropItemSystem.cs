@@ -13,7 +13,7 @@ public class DropItemSystem : MonoBehaviour
     [SerializeField] private float collectDistance = 0.3f;
 
     public DropItem dropItem;
-      private Transform player;
+    private Transform player;
     private bool isCollecting = false;
 
     void Start()
@@ -56,6 +56,7 @@ public class DropItemSystem : MonoBehaviour
         Debug.Log("Initialize");
         this.dropItem = dropItem;
         sr.sprite = dropItem.image;
+        transform.localScale = Vector3.one; 
     }
 
 /*    public void OnTriggerEnter2D(Collider2D other)
