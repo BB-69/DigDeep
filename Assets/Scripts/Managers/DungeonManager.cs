@@ -13,7 +13,6 @@ public class DungeonManager : MonoBehaviour
     CheckpointGenerator checkpointGenerator;
     BlockType[,] grid;
     [SerializeField] GameObject pointVisualization;
-    [SerializeField] GameObject checkpointGO;
     [SerializeField] GameObject playerGO;
     [Header("TILE")]
     [SerializeField] Tilemap tilemap;
@@ -71,7 +70,7 @@ public class DungeonManager : MonoBehaviour
         }
 
         //get 5 random position equally separated
-        Vector2Int[] startingPoints = GetStartingPoints(size);
+        List<Vector2Int> startingPoints = GetStartingPoints(size);
         foreach (var point in startingPoints)
         {
             StartGenerate(tempGrid, Random.Range(minSteps, maxSteps) * 100, point);
@@ -79,18 +78,20 @@ public class DungeonManager : MonoBehaviour
 
         //random player position from starting points
         int playerPosIndex = Random.Range(0, 5);
-
+        startingPoints.RemoveAt(playerPosIndex);
         //place tile
         PlaceTileset(tempGrid);
-        PlacePoints(startingPoints);
-
-        checkpointGenerator.SpawnCheckpointObject(startingPoints, playerPosIndex, new int[]{copperCount, ironCount, goldCount, emeraldCount});
-        //Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
+        Debug.Log(copperCount);
+        Debug.Log(ironCount);
+        Debug.Log(goldCount);
+        Debug.Log(emeraldCount);
+        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[]{copperCount, ironCount, goldCount, emeraldCount});
+        Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
     }
 
-    Vector2Int[] GetStartingPoints(Vector2Int gridSize, int margin = 5)
+    List<Vector2Int> GetStartingPoints(Vector2Int gridSize, int margin = 5)
     {
-        Vector2Int[] points = new Vector2Int[5];
+        List<Vector2Int> points = new List<Vector2Int>();
 
         Vector2Int[] centers = new Vector2Int[]
         {
@@ -105,7 +106,7 @@ public class DungeonManager : MonoBehaviour
         {
             int x = Random.Range(Mathf.Max(0, centers[i].x - margin), Mathf.Min(gridSize.x, centers[i].x + margin));
             int y = Random.Range(Mathf.Max(0, centers[i].y - margin), Mathf.Min(gridSize.y, centers[i].y + margin));
-            points[i] = new Vector2Int(x, y);
+            points.Add(new Vector2Int(x, y));
         }
 
         return points;
@@ -260,12 +261,12 @@ public class DungeonManager : MonoBehaviour
 
     void PlacePoints(Vector2Int[] points)
     {
-#if UNITY_EDITOR
-        foreach (Vector2Int point in points)
-        {
-            Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
-        }
-#endif
+// #if UNITY_EDITOR
+//         foreach (Vector2Int point in points)
+//         {
+//             Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
+//         }
+// #endif
     }
 
     #endregion

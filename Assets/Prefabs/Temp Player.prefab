@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 8662652332668175733}
   - component: {fileID: 906680965864653243}
   - component: {fileID: 8436380335367607304}
+  - component: {fileID: 8564237812214617595}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Temp Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,3 +173,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8564237812214617595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4485418065492791814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1614cafac8b660a4e994203120e9a7db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

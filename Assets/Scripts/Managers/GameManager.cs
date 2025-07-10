@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance{ get; private set; }
+    [SerializeField] int checkpointPassed =0;
     public static UnityAction OnLevelStart; //call from checkpoint
     public int level = 0;
     public bool isStarted;
@@ -35,6 +36,16 @@ public class GameManager : MonoBehaviour
 
     void OnDisable()
     {
+    }
+
+    public void OnCompleteCheckpoint()
+    {
+        checkpointPassed++;
+        Debug.Log($"Complete {checkpointPassed} checkpoints");
+        if (checkpointPassed == 4)
+        {
+            OnLevelCleared();
+        }
     }
 
     public void OnLevelCleared()

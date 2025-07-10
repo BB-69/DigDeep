@@ -9,7 +9,7 @@ public class Inventory : MonoBehaviour
 {
     public Dictionary<string, int> inventory;
 
-    protected virtual void Awake()
+    void Awake()
     {
         if (this.inventory == null)
         {
@@ -23,9 +23,9 @@ public class Inventory : MonoBehaviour
         inventory.Clear();
     }
 
-    public virtual void AddItem(string itemName, int amount)
+    public void AddItem(string itemName, int amount)
     {
-        if (PlayerHasKey(itemName))
+        if (IsPlayerHasItem(itemName))
         {
             this.inventory[itemName] += amount;
         }
@@ -35,7 +35,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public virtual bool PlayerHasKey(string itemName)
+    public bool IsPlayerHasItem(string itemName)
     {
         if (this.inventory == null)
         {
@@ -47,14 +47,14 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public virtual bool PlayerHasItem(string itemName, int amount)
+    public bool IsPlayerHasEnoughItem(string itemName, int amount)
     {
         return this.inventory.ContainsKey(itemName) && inventory[itemName] >= amount;
     }
 
-    public virtual bool MinusItem(string itemName, int amount)
+    public bool RemoveItem(string itemName, int amount)
     {
-        if (PlayerHasItem(itemName, amount))
+        if (IsPlayerHasEnoughItem(itemName, amount))
         {
             this.inventory[itemName] -= amount;
             return true;
@@ -62,9 +62,9 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
-    public virtual void TransferItemTo(Inventory another, string itemName)
+    public void TransferItemTo(Inventory another, string itemName)
     {
-        if (PlayerHasKey(itemName))
+        if (IsPlayerHasItem(itemName))
         {
             another.AddItem(itemName, this.inventory[itemName]);
             this.inventory[itemName] = 0;
@@ -73,7 +73,7 @@ public class Inventory : MonoBehaviour
 
     public virtual void TransferItemTo(Inventory another, string itemName, int amount)
     {
-        if (PlayerHasItem(itemName, amount))
+        if (IsPlayerHasEnoughItem(itemName, amount))
         {
             another.AddItem(itemName, amount);
             this.inventory[itemName] -= amount;
@@ -92,7 +92,7 @@ public class Inventory : MonoBehaviour
 
     public virtual int Get(string ItemName)
     {
-        if (this.inventory != null && PlayerHasKey(ItemName))
+        if (this.inventory != null && IsPlayerHasItem(ItemName))
         {
             return this.inventory[ItemName];
         }

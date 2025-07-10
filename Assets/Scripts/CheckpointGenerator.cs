@@ -4,20 +4,18 @@ using UnityEngine;
 public class CheckpointGenerator : MonoBehaviour
 {
     [SerializeField] GameObject checkpointGO;
-    Checkpoint[] checkpoints;
+    Checkpoint[] checkpoints = new Checkpoint[4];
     int[] oresCount = new int[4]; //numbers of ore in the level (copper/iron/gold/emerald)
 
-    public void SpawnCheckpointObject(Vector2Int[] points, int playerPosIndex, int[] ores)
+    public void SpawnCheckpointObject(List<Vector2Int> points, int[] ores)
     {
-        for (int i = 0; i < points.Length; i++)
+        oresCount = ores;
+        for (int i = 0; i < points.Count; i++)
         {
+
             var go = Instantiate(checkpointGO, new Vector3(points[i].x, points[i].y, 0), Quaternion.identity);
-            if (i == playerPosIndex)
-            {
-                go.GetComponent<Checkpoint>().isSpawnpoint = true;
-                go.GetComponent<Checkpoint>().cleared = true;
-            }
-            else { checkpoints[i] = go.GetComponent<Checkpoint>(); }
+
+            checkpoints[i] = go.GetComponent<Checkpoint>();
         }
         SetOresNeedOnEachCheckpoint();
     }
@@ -28,29 +26,50 @@ public class CheckpointGenerator : MonoBehaviour
 
         foreach (int count in oreCounts)
         {
-            int need = Mathf.FloorToInt(count * 0.7f);
-            int[] parts = new int[4]; // default is [0,0,0,0]
-            int remaining = need;
+            int total = Mathf.FloorToInt(count * 0.7f);
+            int[] parts = new int[4];
+            float[] weights = new float[4];
+            float weightSum = 0;
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
-                parts[i] = Random.Range(0, remaining + 1);
-                remaining -= parts[i];
+                weights[i] = Random.Range(0.8f, 1.2f);
+                weightSum += weights[i];
             }
 
-            parts[3] = remaining;
+            int allocated = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                parts[i] = Mathf.FloorToInt((weights[i] / weightSum) * total);
+                allocated += parts[i];
+            }
+
+            int remainder = total - allocated;
+            for (int i = 0; i < remainder; i++)
+            {
+                int index = Random.Range(0, 4);
+                parts[index]++;
+            }
+
             result.Add(parts);
         }
 
         return result;
     }
 
+
     void SetOresNeedOnEachCheckpoint()
     {
         List<int[]> oresSets = SplitOres(oresCount);
-        for (int i = 0; i < 4; i++)
+
+        for (int checkpointIndex = 0; checkpointIndex < 4; checkpointIndex++)
         {
-            checkpoints[i].Setup(oresSets[i][0], oresSets[i][1], oresSets[i][2], oresSets[i][3]);
+            int copper = oresSets[0][checkpointIndex];
+            int iron = oresSets[1][checkpointIndex];
+            int gold = oresSets[2][checkpointIndex];
+            int emerald = oresSets[3][checkpointIndex];
+
+            checkpoints[checkpointIndex].Setup(copper, iron, gold, emerald);
         }
     }
 }
