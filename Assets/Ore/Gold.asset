@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18f34a510aeda946b4dee010429d42c, type: 3}
+  m_Name: Gold
+  m_EditorClassIdentifier: 
+  title: {fileID: 11400000, guid: e41430dc2f0e2b949a74021fdabe45ac, type: 2}
+  gameObject: {fileID: 1354178582839232223, guid: 095ad68b995427148a7c8b91f72a5061, type: 3}
+  xp: 250
+  stackAble: 1
+  image: {fileID: 4609362636780787135, guid: 7af4c56aa6d6d1747ae7fc0863cb6a69, type: 3}
+  itemName: Gold
+  description: use for unlock the checkpoints!

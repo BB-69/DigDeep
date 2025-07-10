@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d18f34a510aeda946b4dee010429d42c, type: 3}
-  m_Name: TestObject1
+  m_Name: Copper
   m_EditorClassIdentifier: 
-  title: {fileID: 11400000, guid: 21e2c297d67d52a42a7f475fab98fdec, type: 2}
-  gameObject: {fileID: 0}
-  xp: 250
+  title: {fileID: 11400000, guid: 6030761d59d3d894086343921dece0c4, type: 2}
+  gameObject: {fileID: 1354178582839232223, guid: 095ad68b995427148a7c8b91f72a5061, type: 3}
+  xp: 50
   stackAble: 1
-  image: {fileID: 3355423005436571770, guid: 1b39c0fe73f0433468e25eb21cfde7c2, type: 3}
-  itemName: Gold
-  description: this is a gold
+  image: {fileID: -5006588690007804246, guid: 3d0390a08482f67479a71f0d1d54ddfc, type: 3}
+  itemName: Copper
+  description: use for unlock the checkpoints!
