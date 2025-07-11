@@ -17,6 +17,7 @@ public class DungeonManager : MonoBehaviour
     [Header("TILE")]
     [SerializeField] Tilemap tilemap;
     [Header("Dungeon Customization")]
+    [SerializeField] CameraSetUp cameraSetUp;
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
@@ -78,6 +79,7 @@ public class DungeonManager : MonoBehaviour
 
         //random player position from starting points
         int playerPosIndex = Random.Range(0, 5);
+        Vector3 playerPos = new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0);
         startingPoints.RemoveAt(playerPosIndex);
         //place tile
         PlaceTileset(tempGrid);
@@ -85,8 +87,12 @@ public class DungeonManager : MonoBehaviour
         Debug.Log(ironCount);
         Debug.Log(goldCount);
         Debug.Log(emeraldCount);
-        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[]{copperCount, ironCount, goldCount, emeraldCount});
-        Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
+        Debug.Log(playerPos);
+        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[] { copperCount, ironCount, goldCount, emeraldCount });
+        var player = Instantiate(playerGO, playerPos, Quaternion.identity);
+        
+        cameraSetUp.SetBounds();
+        cameraSetUp.SetPlayer(player.transform);
     }
 
     List<Vector2Int> GetStartingPoints(Vector2Int gridSize, int margin = 5)
@@ -264,16 +270,6 @@ public class DungeonManager : MonoBehaviour
         }
 
 
-    }
-
-    void PlacePoints(Vector2Int[] points)
-    {
-// #if UNITY_EDITOR
-//         foreach (Vector2Int point in points)
-//         {
-//             Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
-//         }
-// #endif
     }
 
     #endregion

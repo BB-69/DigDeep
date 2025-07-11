@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerTemp : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
     public Inventory inventory { get;  private set; }
     public float xp { get;  private set; }
@@ -36,13 +36,19 @@ public class PlayerTemp : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Interactable"))
+        if (collision.gameObject.CompareTag("Interactable"))
+        {
             interactableObj = collision.GetComponent<IInteractable>();
+            interactableObj.OnEnterInteractRange();
+        }
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Interactable"))
+        if (collision.gameObject.CompareTag("Interactable"))
+        {
             interactableObj = collision.GetComponent<IInteractable>();
+            interactableObj.OnExitInteractRange();
+        }
     }
 }
