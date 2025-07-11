@@ -14,7 +14,7 @@ public class Inventory : MonoBehaviour
         if (this.inventory == null)
         {
             this.inventory = new Dictionary<string, int>()
-            { { "copper", 0 }, { "iron", 0 }, { "gold", 0 }, { "emerald", 0 } };
+            { { "Copper", 0 }, { "Iron", 0 }, { "Gold", 0 }, { "Emerald", 0 } };
         }
     }
 
@@ -33,6 +33,7 @@ public class Inventory : MonoBehaviour
         {
             this.inventory.Add(itemName, amount);
         }
+        UIManager.Instance.UpdateInventoryUI(this.inventory);
     }
 
     public bool IsPlayerHasItem(string itemName)
@@ -57,6 +58,7 @@ public class Inventory : MonoBehaviour
         if (IsPlayerHasEnoughItem(itemName, amount))
         {
             this.inventory[itemName] -= amount;
+            UIManager.Instance.UpdateInventoryUI(this.inventory);
             return true;
         }
         return false;
@@ -68,6 +70,7 @@ public class Inventory : MonoBehaviour
         {
             another.AddItem(itemName, this.inventory[itemName]);
             this.inventory[itemName] = 0;
+            UIManager.Instance.UpdateInventoryUI(this.inventory);
         }
     }
 
@@ -77,6 +80,7 @@ public class Inventory : MonoBehaviour
         {
             another.AddItem(itemName, amount);
             this.inventory[itemName] -= amount;
+            UIManager.Instance.UpdateInventoryUI(this.inventory);
         }
         //inventory.Clear();
     }
@@ -87,6 +91,7 @@ public class Inventory : MonoBehaviour
         {
             another.AddItem(item.Key, item.Value);
             this.inventory[item.Key] = 0;
+            UIManager.Instance.UpdateInventoryUI(this.inventory);
         }
     }
 

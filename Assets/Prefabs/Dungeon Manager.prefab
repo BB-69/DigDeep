@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3339732563879008891}
   - component: {fileID: 3449198134622503422}
   - component: {fileID: 2326783907618594834}
+  - component: {fileID: 730053688752822066}
   m_Layer: 0
   m_Name: Dungeon Manager
   m_TagString: Untagged
@@ -46,14 +47,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointVisualization: {fileID: 2784728680730488656, guid: 5429cc85ea46cc14ab1d4c4bf71bbe66, type: 3}
-  checkpointGO: {fileID: 2784728680730488656, guid: 5429cc85ea46cc14ab1d4c4bf71bbe66, type: 3}
-  playerGO: {fileID: 4485418065492791814, guid: 5a4783676eb58464c93db2f6511f7ddd, type: 3}
+  playerGO: {fileID: 6799936678824053923, guid: 43e52ff74f2bdc943a7054a249568616, type: 3}
   tilemap: {fileID: 0}
-  emptySpace: {fileID: 11400000, guid: c92ac406569bf884d80da0e764521da2, type: 2}
-  caveWall: {fileID: 11400000, guid: 55f22c19fe8d34a489565c2480525aa5, type: 2}
-  size: {x: 150, y: 90}
-  minSteps: 10
-  maxSteps: 25
+  cameraSetUp: {fileID: 0}
+  size: {x: 100, y: 60}
+  minSteps: 5
+  maxSteps: 15
+  copperChance: 3
+  ironChance: 1
+  goldChance: 0
+  emeraldChance: 0
 --- !u!114 &2326783907618594834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,3 +82,16 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: c92ac406569bf884d80da0e764521da2, type: 2}
   - name: Wall
     tile: {fileID: 11400000, guid: 55f22c19fe8d34a489565c2480525aa5, type: 2}
+--- !u!114 &730053688752822066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5724995426126546181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9358ee94d1e7d443ab51a5c3e3907a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointGO: {fileID: 2784728680730488656, guid: 5429cc85ea46cc14ab1d4c4bf71bbe66, type: 3}

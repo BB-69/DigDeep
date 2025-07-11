@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static UnityAction OnLevelStart; //call from checkpoint
     public int level = 0;
     public bool isStarted;
-    [SerializeField] float timer = 0;
+    public float timer { get; private set; } = 0;
     void Awake()
     {
         if (instance == null) instance = this;
@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     public void OnCompleteCheckpoint()
     {
         checkpointPassed++;
+        UIManager.Instance.AddCheckpointText(checkpointPassed);
         Debug.Log($"Complete {checkpointPassed} checkpoints");
         if (checkpointPassed == 4)
         {
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeToNextLevel()
     {
+        OnLevelStart?.Invoke();
         level++;
         if (level <= 3)
         {
