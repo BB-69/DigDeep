@@ -4,12 +4,22 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public Inventory inventory { get;  private set; }
+    public static PlayerManager instance { get; private set; }
+    public Inventory inventory { get; private set; }
     public float xp { get;  private set; }
     IInteractable interactableObj;
     void Awake()
     {
         inventory = GetComponent<Inventory>();
+    }
+
+    void OnEnable()
+    {
+        GameManager.OnLevelStart += ResetXP ;
+    }
+    void OnDisable()
+    {
+        GameManager.OnLevelStart -= ResetXP;
     }
 
     void Update()
@@ -32,6 +42,11 @@ public class PlayerManager : MonoBehaviour
     public void AddXp(int amount)
     {
         xp += amount;
+    }
+
+    public void ResetXP()
+    {
+        xp = 0;
     }
 
     void OnTriggerEnter2D(Collider2D collision)

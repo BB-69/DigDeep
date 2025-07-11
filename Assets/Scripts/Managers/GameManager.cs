@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
 
     public void OnLevelCleared()
     {
+        //show ui
         isStarted = false;
         Debug.Log(timer);
         timer = 0;
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeToNextLevel()
     {
+        checkpointPassed = 0;
         OnLevelStart?.Invoke();
         level++;
         if (level <= 3)

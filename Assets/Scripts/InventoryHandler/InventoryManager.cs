@@ -53,14 +53,14 @@ public class InventoryManager : MonoBehaviour
         {
             InventorySlot slot = inventorySlots[i];
             InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
-            if (itemInSlot != null && itemInSlot.dropItem == dropItem && itemInSlot.count < 99 && itemInSlot.dropItem.stackAble == true)
-            {
-                itemInSlot.count++;
-                itemInSlot.RefreshCount();
-                InventoryStatTracker.instance.AddItem(dropItem.itemName);
+            // if (itemInSlot != null && itemInSlot.dropItem == dropItem && itemInSlot.count < 99 && itemInSlot.dropItem.stackAble == true)
+            // {
+            //     itemInSlot.count++;
+            //     itemInSlot.RefreshCount();
+            //     InventoryStatTracker.instance.AddItem(dropItem.itemName);
 
-                return true;
-            }
+            //     return true;
+            // }
         }
        /* if (isOnCheckpoint == true)
         {

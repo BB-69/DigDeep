@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,6 +51,7 @@ public class UIManager : MonoBehaviour
     {
         levelText.text = "Level: " + GameManager.instance.level.ToString();
         timerText.text = "Time: 0";
+        AddCheckpointText(0);
         PressToInteractUI.SetActive(false);
     }
 

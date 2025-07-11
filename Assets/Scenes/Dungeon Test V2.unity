@@ -2164,7 +2164,7 @@ MonoBehaviour:
   PressToInteractUI: {fileID: 1064898152}
   levelText: {fileID: 66388565}
   timerText: {fileID: 1801720391}
-  checkpointText: {fileID: 0}
+  checkpointText: {fileID: 595678961}
   itemUI:
   - {fileID: 1571165454}
   - {fileID: 328316944}
@@ -2962,6 +2962,26 @@ PrefabInstance:
       propertyPath: cameraSetUp
       value: 
       objectReference: {fileID: 875424703}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: itemToDrops.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: 'itemToDrops.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8589976309481210918, guid: fc45e57f363f544439d5ad5ffdcaeca2, type: 3}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: 'itemToDrops.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7640450486051547516, guid: 270377b1dfb44534d854f6fa823f3141, type: 3}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: 'itemToDrops.Array.data[2]'
+      value: 
+      objectReference: {fileID: 6343239336687473672, guid: 88ffa327711b1fc45b14519177400156, type: 3}
+    - target: {fileID: 3449198134622503422, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
+      propertyPath: 'itemToDrops.Array.data[3]'
+      value: 
+      objectReference: {fileID: 7068499638997576106, guid: afd512dba2a00d9469424e666bb1acd9, type: 3}
     - target: {fileID: 5724995426126546181, guid: 79df705959ca7a14ba3985386a1cf0a3, type: 3}
       propertyPath: m_Name
       value: Dungeon Manager

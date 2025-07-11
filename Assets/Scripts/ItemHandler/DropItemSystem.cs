@@ -13,85 +13,69 @@ public class DropItemSystem : MonoBehaviour
     [SerializeField] private float collectDistance = 0.3f;
 
     public DropItem dropItem;
-    private Transform player;
     private bool isCollecting = false;
-
+    void Awake()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+    }
     void Start()
     {
         sr.sprite = dropItem.image;
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-
-        if (player == null)
-        {
-            Debug.LogError("Player not found. Make sure your player has tag 'Player'");
-        }
     }
 
     void Update()
     {
-        if (player == null || isCollecting) return;
-
-        float distance = Vector3.Distance(transform.position, player.position);
+        if (isCollecting) return;
+        float distance = Vector3.Distance(transform.position, PlayerManager.instance.transform.position);
 
         if (distance <= attractRadius)
         {
             // เคลื่อนเข้าหา Player
-            transform.position = Vector3.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, PlayerManager.instance.transform.position, moveSpeed * Time.deltaTime);
 
             if (distance <= collectDistance)
             {
                 isCollecting = true;
+                PlayerManager.instance.inventory.AddItem(dropItem.itemName, 1);
+                PlayerManager.instance.AddXp(dropItem.xp);
+                Destroy(gameObject);
+            }
+        }
+    }
 
-                bool canAdd = InventoryManager.instance.AddItem(dropItem);
+    /*    public void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("Player"))
+            {
+            DropItem myDropItem = GetComponent<DropItemSystem>().dropItem;
+
+            if (myDropItem != null)
+            {
+                 bool canAdd = InventoryManager.instance.AddItem(dropItem);
                 if (canAdd)
                 {
-                    Destroy(gameObject);
+                    StartCoroutine(MoveAndCollect(other.transform));
                 }
             }
-        }
-    }
-
-    public void Initialize(DropItem dropItem)
-    {
-        Debug.Log("Initialize");
-        this.dropItem = dropItem;
-        sr.sprite = dropItem.image;
-        transform.localScale = Vector3.one; 
-    }
-
-/*    public void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-        DropItem myDropItem = GetComponent<DropItemSystem>().dropItem;
-
-        if (myDropItem != null)
-        {
-             bool canAdd = InventoryManager.instance.AddItem(dropItem);
-            if (canAdd)
+            else
             {
-                StartCoroutine(MoveAndCollect(other.transform));
+                Debug.LogError(" no DropItem in setting DropItemSystem!");
             }
-        }
-        else
-        {
-            Debug.LogError(" no DropItem in setting DropItemSystem!");
-        }
-         
-        }
-    }*/
 
-/*    private IEnumerator MoveAndCollect(Transform target)
-    {
-        Debug.Log("MoveAndCollect");
-        Destroy(colliders);
+            }
+        }*/
 
-        while (transform.position != target.position)
+    /*    private IEnumerator MoveAndCollect(Transform target)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
-            yield return 0;
+            Debug.Log("MoveAndCollect");
+            Destroy(colliders);
+
+            while (transform.position != target.position)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+                yield return 0;
+            }
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
-    }
-*/
+    */
 }

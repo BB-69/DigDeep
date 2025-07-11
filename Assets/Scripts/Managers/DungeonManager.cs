@@ -14,6 +14,8 @@ public class DungeonManager : MonoBehaviour
     BlockType[,] grid;
     [SerializeField] GameObject pointVisualization;
     [SerializeField] GameObject playerGO;
+    [SerializeField] GameObject[] itemToDrops;
+    GameObject currentPlayer;
     [Header("TILE")]
     [SerializeField] Tilemap tilemap;
     [Header("Dungeon Customization")]
@@ -89,10 +91,12 @@ public class DungeonManager : MonoBehaviour
         Debug.Log(emeraldCount);
         Debug.Log(playerPos);
         checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[] { copperCount, ironCount, goldCount, emeraldCount });
-        var player = Instantiate(playerGO, playerPos, Quaternion.identity);
+        if(currentPlayer==null)
+            currentPlayer = Instantiate(playerGO, playerPos, Quaternion.identity);
+        else currentPlayer.transform.position = playerPos;
         
         cameraSetUp.SetBounds();
-        cameraSetUp.SetPlayer(player.transform);
+        cameraSetUp.SetPlayer(currentPlayer.transform);
     }
 
     List<Vector2Int> GetStartingPoints(Vector2Int gridSize, int margin = 5)
@@ -283,11 +287,11 @@ public class DungeonManager : MonoBehaviour
             blocks[position].canDig = false;
             if (tile.blockType == BlockType.Normal)
             {
-                CalculateItemDrop();
+                CalculateItemDrop(new Vector2(position.x, position.y));
             }
             else
             {
-                DropItem(tile.blockType);
+                DropItem(tile.blockType, new Vector2(position.x, position.y));
             }
 
             tilemap.SetTile(position, tileLib.GetTile("Empty"));
@@ -299,7 +303,7 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    void CalculateItemDrop()
+    void CalculateItemDrop(Vector2 position)
     {
         int dropChance = Random.Range(0, 100);
         if (dropChance >= 90)
@@ -307,23 +311,38 @@ public class DungeonManager : MonoBehaviour
             int weight = Random.Range(0, 100);
             if (weight <= 80)
             {
-                DropItem(BlockType.Copper);
+                DropItem(BlockType.Copper, position);
             }
             else if (weight <= 95)
             {
-                DropItem(BlockType.Iron);
+                DropItem(BlockType.Iron, position);
             }
             else
             {
-                DropItem(BlockType.Gold);
+                DropItem(BlockType.Gold, position);
             }
         }
     }
 
-    void DropItem(BlockType blockType)
+    void DropItem(BlockType blockType, Vector2 position)
     {
         //TODO: Drop ore
         if (blockType == BlockType.Normal) return;
+        switch (blockType)
+        {
+            case BlockType.Copper:
+                Instantiate(itemToDrops[0], position, Quaternion.identity);
+                break;
+            case BlockType.Iron:
+                Instantiate(itemToDrops[1], position, Quaternion.identity);
+                break;
+            case BlockType.Gold:
+                Instantiate(itemToDrops[2], position, Quaternion.identity);
+                break;
+            case BlockType.Emerald:
+                Instantiate(itemToDrops[3], position, Quaternion.identity);
+                break;
+        }
         Debug.Log(blockType.ToString());
     }
 
