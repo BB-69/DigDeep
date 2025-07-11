@@ -24,10 +24,10 @@ public class Checkpoint : MonoBehaviour, IInteractable
 
     public void Setup(int copper, int iron, int gold, int emerald)
     {
-        oreNeeds["copper"] = copper;
-        oreNeeds["iron"] = iron;
-        oreNeeds["gold"] = gold;
-        oreNeeds["emerald"] = emerald;
+        oreNeeds["Copper"] = copper;
+        oreNeeds["Iron"] = iron;
+        oreNeeds["Gold"] = gold;
+        oreNeeds["Emerald"] = emerald;
 
         SetDisplayText();
     }
@@ -50,11 +50,13 @@ public class Checkpoint : MonoBehaviour, IInteractable
     public void OnEnterInteractRange()
     {
         UIShowOreNeeds.SetActive(true);
+        UIManager.Instance.ShowPressToInteractUI();
     }
 
     public void OnExitInteractRange()
     {
         UIShowOreNeeds.SetActive(false);
+        UIManager.Instance.HidePressToInteractUI();
     }
 
     public void Interact(PlayerManager player)
@@ -81,6 +83,7 @@ public class Checkpoint : MonoBehaviour, IInteractable
         }
         cleared = true;
         GameManager.instance.OnCompleteCheckpoint();
+        Destroy(gameObject);
     }
 
 }

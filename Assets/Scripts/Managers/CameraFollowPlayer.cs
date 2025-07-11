@@ -4,15 +4,15 @@ using UnityEngine.Tilemaps;
 
 public class CameraSetUp : MonoBehaviour
 {
-    CinemachineCamera cinemachineCamera;
-    CinemachineConfiner2D cinemachineConfiner2D;
+    [SerializeField] CinemachineCamera cinemachineCamera;
+    [SerializeField] CinemachineConfiner2D cinemachineConfiner2D;
     [SerializeField] Tilemap tilemap;
     [SerializeField] PolygonCollider2D confinerCollider;
 
     void Start()
     {
-        cinemachineCamera = GetComponentInChildren<CinemachineCamera>();
-        cinemachineConfiner2D = GetComponentInChildren<CinemachineConfiner2D>();
+        // cinemachineCamera = GetComponentInChildren<CinemachineCamera>();
+        // cinemachineConfiner2D = GetComponentInChildren<CinemachineConfiner2D>();
     }
 
     public void SetPlayer(Transform player)
