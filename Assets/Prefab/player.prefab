@@ -213,6 +213,7 @@ GameObject:
   - component: {fileID: 8651804189232328380}
   - component: {fileID: 7763239234135548101}
   - component: {fileID: 5401087010144689129}
+  - component: {fileID: -1849876133436222640}
   m_Layer: 8
   m_Name: player
   m_TagString: Player
@@ -249,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3710c5cc920510744a8665af0f863e65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 1
   MoveX: 0
   MoveSpeed: 3
   dashSpeed: 10
@@ -350,6 +352,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1614cafac8b660a4e994203120e9a7db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1849876133436222640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6799936678824053923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa01c0eda7d27384e8d41d22ddca0b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bombPrefab: {fileID: 525316835044553660, guid: a71e6cfa8cafe3d4ab6dd5e95b9a50d1, type: 3}
+  bombCount: 3
+  dungeonManager: {fileID: 0}
 --- !u!1 &7410761562906782205
 GameObject:
   m_ObjectHideFlags: 0
