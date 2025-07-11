@@ -49,13 +49,13 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(Dash());
         }
-
+/*
         if (Input.GetButtonDown("Fire1")) //shoot bomb
         {
 
 
             Instantiate(LaunchableProjectile, LaunchOffset.position, LaunchOffset.rotation);
-        }
+        }*/
 
     }
     private void FixedUpdate()
