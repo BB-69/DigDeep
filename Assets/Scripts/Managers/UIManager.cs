@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+    [SerializeField] GameObject loseUI;
+    [SerializeField] TextMeshProUGUI loseDetailText;
     public GameObject PressToInteractUI;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI timerText;
@@ -70,6 +72,14 @@ public class UIManager : MonoBehaviour
             itemUI[i].SetActive(value > 0);
             itemText[i].text = "x"+value.ToString();
         }
+    }
+
+    public void ShowLoseUI()
+    {
+        GameManager.instance.isStarted = false;
+        loseUI.SetActive(true);
+        loseDetailText.text = $"level passed: {GameManager.instance.level}\nxp gained: {GameManager.instance.totalXp}";
+        Debug.Log("You lose");
     }
 
     public void ShowPressToInteractUI() => PressToInteractUI.SetActive(true);

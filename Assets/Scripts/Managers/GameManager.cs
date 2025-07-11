@@ -1,20 +1,21 @@
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance{ get; private set; }
-    [SerializeField] int checkpointPassed =0;
+    public static GameManager instance { get; private set; }
+    [SerializeField] int checkpointPassed = 0;
     public static UnityAction OnLevelStart; //call from checkpoint
     public int level = 0;
     public bool isStarted;
     public float timer { get; private set; } = 0;
+    public int totalXp { get; private set; } = 0;
     void Awake()
     {
         if (instance == null) instance = this;
         else { Destroy(this.gameObject); }
-        DontDestroyOnLoad(gameObject);  
     }
     void Start()
     {
@@ -30,12 +31,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    public void AddXp(int xp)
     {
-    }
-
-    void OnDisable()
-    {
+        totalXp += xp;
+        Debug.Log($"Total XP: {totalXp}");
     }
 
     public void OnCompleteCheckpoint()
@@ -79,5 +78,18 @@ public class GameManager : MonoBehaviour
 
         DungeonManager.instance.Regenerate();
         isStarted = true;
+    }
+
+    public void LoseGame()
+    {
+        isStarted = false;
+        PlayerManager.instance.playerMovement.canMove = false;
+        UIManager.Instance.ShowLoseUI();
+        Debug.Log("You lose!");
+    }
+
+    public void LoadStartScene()
+    {
+        SceneManager.LoadScene("Desktop");
     }
 }

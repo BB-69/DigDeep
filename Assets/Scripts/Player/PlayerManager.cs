@@ -5,12 +5,14 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance { get; private set; }
+    public PlayerMovement playerMovement { get; private set; }
     public Inventory inventory { get; private set; }
     public float xp { get;  private set; }
     IInteractable interactableObj;
     void Awake()
     {
         inventory = GetComponent<Inventory>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     void OnEnable()
@@ -46,6 +48,7 @@ public class PlayerManager : MonoBehaviour
 
     public void ResetXP()
     {
+        GameManager.instance.AddXp((int)xp);
         xp = 0;
     }
 

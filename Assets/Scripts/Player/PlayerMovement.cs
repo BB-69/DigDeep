@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public bool canMove = true;
     private Rigidbody2D rb;
 
     public float MoveX, MoveSpeed = 1f, dashSpeed = 5f, dashDuration = 0.2f, JumpForce = 10f, groundCheckDistance = 0.2f;
@@ -24,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!canMove) return;
+        
         MoveX = Input.GetAxis("Horizontal");
         transform.position += new Vector3(MoveX, 0, 0) * Time.deltaTime * MoveSpeed;
 
