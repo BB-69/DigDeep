@@ -11,6 +11,14 @@ public class PlayerManager : MonoBehaviour
     IInteractable interactableObj;
     void Awake()
     {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         inventory = GetComponent<Inventory>();
         playerMovement = GetComponent<PlayerMovement>();
     }

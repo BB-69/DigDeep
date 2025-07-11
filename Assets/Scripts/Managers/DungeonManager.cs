@@ -15,9 +15,10 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] GameObject pointVisualization;
     [SerializeField] GameObject playerGO;
     [SerializeField] GameObject[] itemToDrops;
+    [SerializeField] TileClickDig tileClickDig;
     GameObject currentPlayer;
     [Header("TILE")]
-    [SerializeField] Tilemap tilemap;
+    public Tilemap tilemap;
     [Header("Dungeon Customization")]
     [SerializeField] CameraSetUp cameraSetUp;
     [SerializeField] Vector2Int size;
@@ -91,12 +92,13 @@ public class DungeonManager : MonoBehaviour
         Debug.Log(emeraldCount);
         Debug.Log(playerPos);
         checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[] { copperCount, ironCount, goldCount, emeraldCount });
-        if(currentPlayer==null)
+        if (currentPlayer == null)
             currentPlayer = Instantiate(playerGO, playerPos, Quaternion.identity);
         else currentPlayer.transform.position = playerPos;
-        
+
         cameraSetUp.SetBounds();
         cameraSetUp.SetPlayer(currentPlayer.transform);
+        tileClickDig.SetPlayer(currentPlayer);
     }
 
     List<Vector2Int> GetStartingPoints(Vector2Int gridSize, int margin = 5)
@@ -215,6 +217,7 @@ public class DungeonManager : MonoBehaviour
 
                 if (isFirstTimeGenerate)
                 {
+                    Debug.Log(tileCache[grid[x, y]]);
                     tilemap.SetTile(new Vector3Int(x, y, 0), tile);
                 }
                 else
