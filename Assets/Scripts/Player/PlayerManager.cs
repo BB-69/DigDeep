@@ -41,22 +41,16 @@ public class PlayerManager : MonoBehaviour
                 interactableObj.Interact(this);
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            inventory.AddItem("Copper", 4000);
-            inventory.AddItem("Iron", 300);
-        }
     }
 
     public void AddXp(int amount)
     {
+        GameManager.instance.AddXp(amount);
         xp += amount;
     }
 
     public void ResetXP()
     {
-        GameManager.instance.AddXp((int)xp);
         xp = 0;
     }
 

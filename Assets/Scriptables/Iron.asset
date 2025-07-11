@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Iron
   m_EditorClassIdentifier: 
   xp: 30
-  image: {fileID: -1270813720, guid: a246aa93260e2974abcd2be1ae1f6bb5, type: 3}
+  image: {fileID: 21300000, guid: aec28742d78030c46821fd1b8616e1ff, type: 3}
   itemName: Iron

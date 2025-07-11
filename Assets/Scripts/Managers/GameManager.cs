@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public int level = 0;
     public bool isStarted;
     public float timer { get; private set; } = 0;
+    float timeLimit = 60f;
     public int totalXp { get; private set; } = 0;
     void Awake()
     {
@@ -27,7 +28,11 @@ public class GameManager : MonoBehaviour
     {
         if (isStarted)
         {
-            timer += Time.deltaTime;
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                LoseGame();
+            }
         }
     }
 
@@ -65,19 +70,23 @@ public class GameManager : MonoBehaviour
         level++;
         if (level <= 3)
         {
+            timeLimit = 240f;
             DungeonManager.instance.SetValue(); //default
         }
         else if (level <= 6)
         {
+            timeLimit = 300f;
             DungeonManager.instance.SetValue(3f, 2f, .5f, 0);
         }
         else
         {
+            timeLimit = 400f;
             DungeonManager.instance.SetValue(2f, 3f, 1f, .5f);
         }
 
         DungeonManager.instance.Regenerate();
         isStarted = true;
+        timer = timeLimit;
     }
 
     public void LoseGame()
