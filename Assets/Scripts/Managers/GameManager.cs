@@ -70,11 +70,19 @@ public class GameManager : MonoBehaviour
         ChangeToNextLevel();
     }
 
-    public void ChangeToNextLevel()
+    public void ResetLevel()
+    {
+        isStarted = false;
+        timer = 0;
+        ChangeToNextLevel(true);
+    }
+
+    public void ChangeToNextLevel(bool isReset = false)
     {
         checkpointPassed = 0;
         OnLevelStart?.Invoke();
-        level++;
+        if(!isReset)
+            level++;
         if (level <= 3)
         {
             timeLimit = 240f;
@@ -100,6 +108,7 @@ public class GameManager : MonoBehaviour
     {
         isStarted = false;
         PlayerManager.instance.playerMovement.canMove = false;
+        ResetButton.Instance.canPress = false;
         UIManager.Instance.ShowLoseUI();
         Debug.Log("You lose!");
     }

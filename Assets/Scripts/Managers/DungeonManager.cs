@@ -322,7 +322,7 @@ public class DungeonManager : MonoBehaviour
             }
             else if (weight <= 95)
             {
-                DropItem(BlockType.Emerald, position);
+                DropItem(BlockType.Gold, position);
             }
             else
             {
