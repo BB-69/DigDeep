@@ -10,7 +10,7 @@ public class HowToPlay : MonoBehaviour
     void Start()
     {
         howToPanel.SetActive(false);
-        text.text = "Press [H] to view how to play?";
+        text.text = "Press [H] to view how to play";
     }
 
     void Update()

@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      icons-and-abulites-stuff_0001s_0000_Calque-12_0: -6726839258850278894
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

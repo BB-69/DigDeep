@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      icons-and-abulites-stuff_0001s_0003_boomb-fire_0: -6268403448514635403
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

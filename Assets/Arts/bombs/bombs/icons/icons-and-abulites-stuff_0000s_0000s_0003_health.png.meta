@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      icons-and-abulites-stuff_0000s_0000s_0003_health_0: 1967156574537238229
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
