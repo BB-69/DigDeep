@@ -17,8 +17,9 @@ public class GameManager : MonoBehaviour
     public static UnityAction OnLevelStart; //call from checkpoint
     public int level = 0;
     public bool isStarted;
+    public float totalTime { get; private set; } = 0f;
     public float timer { get; private set; } = 0;
-    float timeLimit = 60f;
+    public float timeLimit { get; private set; } = 60f;
     public int totalXp { get; private set; } = 0;
     void Awake()
     {
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        SoundManager.Instance.PlayMusic("bg");
         ChangeToNextLevel();
     }
 
@@ -35,8 +37,8 @@ public class GameManager : MonoBehaviour
     {
         if (isStarted)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
+            timer += Time.deltaTime;
+            if (timer >= timeLimit)
             {
                 LoseGame();
             }
@@ -53,7 +55,7 @@ public class GameManager : MonoBehaviour
     {
         checkpointPassed++;
         UIManager.Instance.AddCheckpointText(checkpointPassed);
-        PlayerManager.instance.bombThrower.AddBomb(5);
+        PlayerManager.instance.bombThrower.AddBomb(CalculateBombToAdd());
         Debug.Log($"Complete {checkpointPassed} checkpoints");
         if (checkpointPassed == 4)
         {
@@ -61,9 +63,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    int CalculateBombToAdd()
+    {
+        if (level < 3)
+        {
+            return 5;
+        }
+        else if (level < 5)
+        {
+            return 8;
+        }
+        else
+        {
+            return 10;
+        }
+    }
+
     public void OnLevelCleared()
     {
         //show ui
+        totalTime += timer;
         isStarted = false;
         Debug.Log(timer);
         timer = 0;
@@ -73,6 +92,7 @@ public class GameManager : MonoBehaviour
 
     public void ResetLevel()
     {
+        totalTime += timer;
         isStarted = false;
         timer = 0;
         ChangeToNextLevel(true);
@@ -84,12 +104,12 @@ public class GameManager : MonoBehaviour
         if(!isReset)
             level++;
         OnLevelStart?.Invoke();
-        if (level <= 3)
+        if (level < 3)
         {
             timeLimit = 240f;
             DungeonManager.instance.SetValue(); //default
         }
-        else if (level <= 6)
+        else if (level < 5)
         {
             timeLimit = 300f;
             DungeonManager.instance.SetValue(3f, 2f, .5f, 0);
@@ -102,11 +122,11 @@ public class GameManager : MonoBehaviour
 
         DungeonManager.instance.Regenerate();
         isStarted = true;
-        timer = timeLimit;
     }
 
     public void LoseGame()
     {
+        totalTime += timer;
         isStarted = false;
         PlayerManager.instance.playerMovement.canMove = false;
         ResetButton.Instance.canPress = false;

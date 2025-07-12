@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5ccd48d328893984a92fc38a8838e415
+guid: 2be1c3f300100bd4bb90494a75e1583b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7384257310358782072
-    second: 0-8960_mouse-cursor-png-pixelated-mouse-cursor-transparent-png-Photoroom_0
+      213: -5007447437997489849
+    second: raw_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 600
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 0-8960_mouse-cursor-png-pixelated-mouse-cursor-transparent-png-Photoroom_0
+      name: raw_0
       rect:
         serializedVersion: 2
-        x: 25
-        y: 85
-        width: 735
-        height: 1161
+        x: 104
+        y: 32
+        width: 810
+        height: 851
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 88fbbf58919d58990800000000000000
-      internalID: -7384257310358782072
+      spriteID: 74148b2f519f18ab0800000000000000
+      internalID: -5007447437997489849
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      0-8960_mouse-cursor-png-pixelated-mouse-cursor-transparent-png-Photoroom_0: -7384257310358782072
+      raw_0: -5007447437997489849
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -78,7 +78,7 @@ public class Checkpoint : MonoBehaviour, IInteractable
             }
         }
         Debug.Log("CAN PASS");
-
+        SoundManager.Instance.PlaySFX("Level Pass");
         foreach (var key in oreNeeds.Keys)
         {
             inventory.RemoveItem(key, oreNeeds[key]);
