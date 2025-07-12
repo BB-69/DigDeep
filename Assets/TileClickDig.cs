@@ -44,18 +44,16 @@ public class TileClickDig : MonoBehaviour
             Vector3 cellCenter = DungeonManager.instance.tilemap.GetCellCenterWorld(cellPos);
 
             float distance = Vector3.Distance(player.position, cellCenter);
-            Debug.Log("Mouse Position (Screen): " + Input.mousePosition);
-            Debug.Log("Mouse World Position: " + mouseWorldPos);
-            Debug.Log("Tile Cell Clicked: " + cellPos);
+
             if (distance <= maxDistance)
             {
                 StartCoroutine(SwingPickaxe(cellCenter));
                 DungeonManager.instance.TakeDamageBlock(cellPos, 25);
-                Debug.Log("Dealing damage to block");
+
             }
             else
             {
-                Debug.Log("Too far to dig");
+
             }
         }
     }

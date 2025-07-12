@@ -56,6 +56,7 @@ public class BombThrower : MonoBehaviour
     public void AddBomb(int amount)
     {
         BombCount += amount;
+        UIManager.Instance.UpdateBombCount(bombCount);
     }
 
     public void SetBombCount()

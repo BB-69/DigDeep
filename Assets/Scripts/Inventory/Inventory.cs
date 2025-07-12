@@ -30,7 +30,9 @@ public class Inventory : MonoBehaviour
 
     public void ClearInventory()
     {
-        inventory.Clear();
+        this.inventory = new Dictionary<string, int>()
+            { { "Copper", 0 }, { "Iron", 0 }, { "Gold", 0 }, { "Emerald", 0 } };
+        UIManager.Instance.UpdateInventoryUI(this.inventory);
     }
 
     public void AddItem(string itemName, int amount)

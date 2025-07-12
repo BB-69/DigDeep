@@ -62,6 +62,7 @@ public class Checkpoint : MonoBehaviour, IInteractable
     public void Interact(PlayerManager player)
     {
         if (isSpawnpoint || cleared) return;
+        Debug.Log("Interacting with checkpoint");
         CheckIfCanPass(player.inventory);
         //condition check if can go
     }
@@ -76,6 +77,7 @@ public class Checkpoint : MonoBehaviour, IInteractable
                 return;
             }
         }
+        Debug.Log("CAN PASS");
 
         foreach (var key in oreNeeds.Keys)
         {

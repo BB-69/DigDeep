@@ -305,7 +305,7 @@ public class DungeonManager : MonoBehaviour
             }
 
             tilemap.SetTile(position, tileLib.GetTile("Empty"));
-            Debug.Log(tile + "Has been destroy" + position);
+            
         }
         else
         {

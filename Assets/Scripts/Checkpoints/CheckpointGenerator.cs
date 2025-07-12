@@ -4,8 +4,32 @@ using UnityEngine;
 public class CheckpointGenerator : MonoBehaviour
 {
     [SerializeField] GameObject checkpointGO;
-    Checkpoint[] checkpoints = new Checkpoint[4];
+    List<GameObject> checkpointsGO = new List<GameObject>();
+    [SerializeField] Checkpoint[] checkpoints = new Checkpoint[4];
     int[] oresCount = new int[4]; //numbers of ore in the level (copper/iron/gold/emerald)
+
+    void OnEnable()
+    {
+        GameManager.OnLevelStart += ClearCheckpoints;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnLevelStart -= ClearCheckpoints;
+    }
+
+    void ClearCheckpoints()
+    {
+        foreach (var checkpoint in checkpointsGO)
+        {
+            if (checkpoint != null)
+            {
+                Destroy(checkpoint);
+            }
+        }
+        checkpointsGO.Clear();
+        checkpoints = new Checkpoint[4];
+    }
 
     public void SpawnCheckpointObject(List<Vector2Int> points, int[] ores)
     {
@@ -16,6 +40,7 @@ public class CheckpointGenerator : MonoBehaviour
             var go = Instantiate(checkpointGO, new Vector3(points[i].x, points[i].y, 0), Quaternion.identity);
 
             checkpoints[i] = go.GetComponent<Checkpoint>();
+            checkpointsGO.Add(go);
         }
         SetOresNeedOnEachCheckpoint();
     }

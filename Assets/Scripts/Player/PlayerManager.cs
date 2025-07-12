@@ -59,6 +59,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Interactable"))
         {
+            Debug.Log(collision.gameObject.name);
             interactableObj = collision.GetComponent<IInteractable>();
             interactableObj.OnEnterInteractRange();
         }
