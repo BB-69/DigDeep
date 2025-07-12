@@ -1,10 +1,17 @@
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] Camera mainCamera;
+    public Camera MainCamera
+    {
+        get { return mainCamera; }
+        set { mainCamera = value; }
+    }
     public static GameManager instance { get; private set; }
     [SerializeField] int checkpointPassed = 0;
     public static UnityAction OnLevelStart; //call from checkpoint

@@ -316,13 +316,17 @@ public class DungeonManager : MonoBehaviour
             {
                 DropItem(BlockType.Copper, position);
             }
-            else if (weight <= 95)
+            else if (weight <= 90)
             {
                 DropItem(BlockType.Iron, position);
             }
+            else if (weight <= 95)
+            {
+                DropItem(BlockType.Emerald, position);
+            }
             else
             {
-                DropItem(BlockType.Gold, position);
+                PlayerManager.instance.bombThrower.AddBomb(1); // 5% chance to drop bomb
             }
         }
     }

@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     public Inventory inventory { get; private set; }
     public float xp { get;  private set; }
     IInteractable interactableObj;
+    public BombThrower bombThrower;
     void Awake()
     {
         if(instance == null)

@@ -10,13 +10,9 @@ public class PlayerMovement : MonoBehaviour
     public int maxJump = 2, jumpCount = 0;
 
     public LayerMask groundLayer;
-
-    public Bomb LaunchableProjectile;
-
     public Transform LaunchOffset, groundCheckPoint;
 
     private bool isDashing = false, wasGroundedLastFrame = false;
-    private Vector2 Charactor;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,8 +26,10 @@ public class PlayerMovement : MonoBehaviour
         MoveX = Input.GetAxis("Horizontal");
         transform.position += new Vector3(MoveX, 0, 0) * Time.deltaTime * MoveSpeed;
 
-        if (!Mathf.Approximately(0, MoveX))
-            transform.rotation = MoveX > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+        // if (MoveX > 0)
+        //     transform.rotation = Quaternion.Euler(0, 180, 0); // Face right
+        // else if (MoveX < 0)
+        //     transform.rotation = Quaternion.identity; // Face left
 
         bool isGrounded = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
 

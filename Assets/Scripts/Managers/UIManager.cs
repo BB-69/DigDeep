@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI checkpointText;
+    public TextMeshProUGUI bombCountText;
 
     public GameObject[] itemUI;
     public TextMeshProUGUI[] itemText;
@@ -55,6 +56,11 @@ public class UIManager : MonoBehaviour
         timerText.text = "Time: 0";
         AddCheckpointText(0);
         PressToInteractUI.SetActive(false);
+    }
+
+    public void UpdateBombCount(int count)
+    {
+        bombCountText.text = "x"+count.ToString();
     }
 
     public void AddCheckpointText(int checkpointCleared)
