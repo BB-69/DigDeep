@@ -10,12 +10,12 @@ public class HowToPlay : MonoBehaviour
     void Start()
     {
         howToPanel.SetActive(false);
-        text.text = "Press [ESC] to view how to play?";
+        text.text = "Press [H] to view how to play?";
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             bool isActive = howToPanel.activeSelf;
             howToPanel.SetActive(!isActive);

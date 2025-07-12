@@ -5,8 +5,10 @@ public class Setting : MonoBehaviour
 
     public GameObject buttonToShow;
 
+
+
     public void Toggle()
     {
-        buttonToShow.SetActive(true);                
+        buttonToShow.SetActive(!buttonToShow.activeSelf);                
     }
 }
