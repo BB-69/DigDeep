@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      0-8960_mouse-cursor-png-pixelated-mouse-cursor-transparent-png-Photoroom_0: -7384257310358782072
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

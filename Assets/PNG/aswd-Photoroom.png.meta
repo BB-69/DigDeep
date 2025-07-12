@@ -209,7 +209,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      aswd-Photoroom_0: -5870699725214532595
+      aswd-Photoroom_1: -2676074380062943982
+      aswd-Photoroom_2: -6573149156613856413
+      aswd-Photoroom_3: -3316818215629156410
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
