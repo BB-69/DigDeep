@@ -40,6 +40,7 @@ public class DropItemSystem : MonoBehaviour
             isCollecting = true;
             PlayerManager.instance.inventory.AddItem(dropItem.itemName, 1);
             PlayerManager.instance.AddXp(dropItem.xp);
+            SoundManager.Instance.PlaySFX("Dig");
             Destroy(gameObject);
         }
     }

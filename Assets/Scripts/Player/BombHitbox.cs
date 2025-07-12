@@ -27,7 +27,7 @@ public class BombHitbox : MonoBehaviour
         Vector3 pos = transform.position;
         Vector3Int centerCell = DungeonManager.instance.tilemap.WorldToCell(pos);
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explodeRadius);
-
+        SoundManager.Instance.PlaySFX("Bomb");
         foreach (var hit in hits)
         {
             if (hit == null || hit.transform == null)

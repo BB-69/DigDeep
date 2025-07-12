@@ -43,12 +43,14 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(new Vector2(0, JumpForce), ForceMode2D.Impulse);
+            SoundManager.Instance.PlaySFX("Jump");
             jumpCount++;
             Debug.Log(jumpCount);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)// walk or dash
         {
+            SoundManager.Instance.PlaySFX("Dash");
             StartCoroutine(Dash());
         }
 

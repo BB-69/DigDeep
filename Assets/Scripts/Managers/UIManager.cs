@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,7 +49,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        timerText.text = "Time: " + GameManager.instance.timer.ToString();
+        timerText.text = "Time: " + (GameManager.instance.timeLimit - GameManager.instance.timer).ToString();
     }
 
     public void ResetUI()
@@ -84,7 +86,7 @@ public class UIManager : MonoBehaviour
     {
         GameManager.instance.isStarted = false;
         loseUI.SetActive(true);
-        loseDetailText.text = $"level passed: {GameManager.instance.level}\nxp gained: {GameManager.instance.totalXp}";
+        loseDetailText.text = $"level passed: {GameManager.instance.level}\nxp gained: {GameManager.instance.totalXp}\ntime spent: {Mathf.FloorToInt(GameManager.instance.totalTime/60)} minutes {Mathf.FloorToInt(GameManager.instance.totalTime%60)} seconds";
         Debug.Log("You lose");
     }
 
