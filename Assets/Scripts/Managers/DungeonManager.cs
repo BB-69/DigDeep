@@ -14,9 +14,13 @@ public class DungeonManager : MonoBehaviour
     BlockType[,] grid;
     [SerializeField] GameObject pointVisualization;
     [SerializeField] GameObject playerGO;
+    [SerializeField] GameObject[] itemToDrops;
+    [SerializeField] TileClickDig tileClickDig;
+    GameObject currentPlayer;
     [Header("TILE")]
-    [SerializeField] Tilemap tilemap;
+    public Tilemap tilemap;
     [Header("Dungeon Customization")]
+    [SerializeField] CameraSetUp cameraSetUp;
     [SerializeField] Vector2Int size;
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
@@ -78,6 +82,7 @@ public class DungeonManager : MonoBehaviour
 
         //random player position from starting points
         int playerPosIndex = Random.Range(0, 5);
+        Vector3 playerPos = new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0);
         startingPoints.RemoveAt(playerPosIndex);
         //place tile
         PlaceTileset(tempGrid);
@@ -85,8 +90,15 @@ public class DungeonManager : MonoBehaviour
         Debug.Log(ironCount);
         Debug.Log(goldCount);
         Debug.Log(emeraldCount);
-        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[]{copperCount, ironCount, goldCount, emeraldCount});
-        Instantiate(playerGO, new Vector3(startingPoints[playerPosIndex].x, startingPoints[playerPosIndex].y, 0), Quaternion.identity);
+        Debug.Log(playerPos);
+        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[] { copperCount, ironCount, goldCount, emeraldCount });
+        if (currentPlayer == null)
+            currentPlayer = Instantiate(playerGO, playerPos, Quaternion.identity);
+        else currentPlayer.transform.position = playerPos;
+
+        cameraSetUp.SetBounds();
+        cameraSetUp.SetPlayer(currentPlayer.transform);
+        tileClickDig.SetPlayer(currentPlayer);
     }
 
     List<Vector2Int> GetStartingPoints(Vector2Int gridSize, int margin = 5)
@@ -205,6 +217,7 @@ public class DungeonManager : MonoBehaviour
 
                 if (isFirstTimeGenerate)
                 {
+                    Debug.Log(tileCache[grid[x, y]]);
                     tilemap.SetTile(new Vector3Int(x, y, 0), tile);
                 }
                 else
@@ -266,16 +279,6 @@ public class DungeonManager : MonoBehaviour
 
     }
 
-    void PlacePoints(Vector2Int[] points)
-    {
-// #if UNITY_EDITOR
-//         foreach (Vector2Int point in points)
-//         {
-//             Instantiate(pointVisualization, new Vector3(point.x, point.y, 0), Quaternion.identity, transform);
-//         }
-// #endif
-    }
-
     #endregion
 
     public void DigTile(Vector3Int position)
@@ -287,14 +290,15 @@ public class DungeonManager : MonoBehaviour
             blocks[position].canDig = false;
             if (tile.blockType == BlockType.Normal)
             {
-                CalculateItemDrop();
+                CalculateItemDrop(new Vector2(position.x, position.y));
             }
             else
             {
-                DropItem(tile.blockType);
+                DropItem(tile.blockType, new Vector2(position.x, position.y));
             }
 
             tilemap.SetTile(position, tileLib.GetTile("Empty"));
+            Debug.Log(tile + "Has been destroy" +  position);
         }
         else
         {
@@ -302,7 +306,7 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    void CalculateItemDrop()
+    void CalculateItemDrop(Vector2 position)
     {
         int dropChance = Random.Range(0, 100);
         if (dropChance >= 90)
@@ -310,23 +314,38 @@ public class DungeonManager : MonoBehaviour
             int weight = Random.Range(0, 100);
             if (weight <= 80)
             {
-                DropItem(BlockType.Copper);
+                DropItem(BlockType.Copper, position);
             }
             else if (weight <= 95)
             {
-                DropItem(BlockType.Iron);
+                DropItem(BlockType.Iron, position);
             }
             else
             {
-                DropItem(BlockType.Gold);
+                DropItem(BlockType.Gold, position);
             }
         }
     }
 
-    void DropItem(BlockType blockType)
+    void DropItem(BlockType blockType, Vector2 position)
     {
         //TODO: Drop ore
         if (blockType == BlockType.Normal) return;
+        switch (blockType)
+        {
+            case BlockType.Copper:
+                Instantiate(itemToDrops[0], position, Quaternion.identity);
+                break;
+            case BlockType.Iron:
+                Instantiate(itemToDrops[1], position, Quaternion.identity);
+                break;
+            case BlockType.Gold:
+                Instantiate(itemToDrops[2], position, Quaternion.identity);
+                break;
+            case BlockType.Emerald:
+                Instantiate(itemToDrops[3], position, Quaternion.identity);
+                break;
+        }
         Debug.Log(blockType.ToString());
     }
 

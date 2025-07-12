@@ -23,7 +23,7 @@ public class ItemToolTipUI : MonoBehaviour
   public void ShowToolTip(DropItem item, Vector3 position)
   {
     nameText.text = item.itemName;
-    descriptionText.text = item.description;
+    //descriptionText.text = item.description;
     xpText.text = "XP: " + item.xp;
 
     // แก้จุดนี้: ขยับ Tooltip ออกห่างจากเมาส์เล็กน้อย

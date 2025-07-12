@@ -26,7 +26,7 @@ public class CheckpointGenerator : MonoBehaviour
 
         foreach (int count in oreCounts)
         {
-            int total = Mathf.FloorToInt(count * 0.7f);
+            int total = Mathf.FloorToInt(count * 0.4f);
             int[] parts = new int[4];
             float[] weights = new float[4];
             float weightSum = 0;
