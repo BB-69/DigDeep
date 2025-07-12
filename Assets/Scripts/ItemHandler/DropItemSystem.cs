@@ -16,7 +16,7 @@ public class DropItemSystem : MonoBehaviour
     private bool isCollecting = false;
     void Awake()
     {
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
@@ -26,7 +26,8 @@ public class DropItemSystem : MonoBehaviour
     void Update()
     {
         if (isCollecting) return;
-        if (this.transform.position!=PlayerManager.instance.transform.position)
+        float distance = Vector3.Distance(transform.position, PlayerManager.instance.transform.position);
+        if (distance > 0.01f)
         {
             transform.position = Vector3.MoveTowards(transform.position, PlayerManager.instance.transform.position, moveSpeed * Time.deltaTime);
         }

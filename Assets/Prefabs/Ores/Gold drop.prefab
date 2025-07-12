@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sr: {fileID: 9150599474540471036}
   colliders: {fileID: 3434348821542089243}
-  moveSpeed: 5
+  moveSpeed: 10
   attractRadius: 3
   dropItem: {fileID: 11400000, guid: 80c9edab15156604cb271d2729eeffd2, type: 2}
 --- !u!212 &9150599474540471036
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6343239336687473672}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7741cff99c39ac444a7f8c0a529c0174, type: 3}
   m_Name: 
