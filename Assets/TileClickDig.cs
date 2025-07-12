@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 
 public class TileClickDig : MonoBehaviour
 {
+    public int damage;
     public Transform player;
     public GameObject pickaxe; // ตัว Pickaxe ที่มี Animator
     public float maxDistance = 5f;
@@ -49,7 +50,7 @@ public class TileClickDig : MonoBehaviour
             if (distance <= maxDistance)
             {
                 StartCoroutine(SwingPickaxe(cellCenter));
-                DungeonManager.instance.TakeDamageBlock(cellPos, 15);
+                DungeonManager.instance.TakeDamageBlock(cellPos, 25);
                 Debug.Log("Dealing damage to block");
             }
             else

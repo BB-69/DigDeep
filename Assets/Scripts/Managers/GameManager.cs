@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
     {
         checkpointPassed++;
         UIManager.Instance.AddCheckpointText(checkpointPassed);
+        PlayerManager.instance.bombThrower.AddBomb(5);
         Debug.Log($"Complete {checkpointPassed} checkpoints");
         if (checkpointPassed == 4)
         {
@@ -80,9 +81,9 @@ public class GameManager : MonoBehaviour
     public void ChangeToNextLevel(bool isReset = false)
     {
         checkpointPassed = 0;
-        OnLevelStart?.Invoke();
         if(!isReset)
             level++;
+        OnLevelStart?.Invoke();
         if (level <= 3)
         {
             timeLimit = 240f;

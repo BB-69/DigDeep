@@ -362,9 +362,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canMove: 1
   MoveX: 0
-  MoveSpeed: 3
-  dashSpeed: 10
-  dashDuration: 0.2
+  MoveSpeed: 6
+  dashSpeed: 25
+  dashDuration: 0.4
   JumpForce: 15
   groundCheckDistance: 0.2
   maxJump: 2
@@ -374,6 +374,7 @@ MonoBehaviour:
     m_Bits: 128
   LaunchOffset: {fileID: 3392374753166538234}
   groundCheckPoint: {fileID: 2462489033285252192}
+  fallMultiplier: 1.5
 --- !u!114 &7333947692373498348
 MonoBehaviour:
   m_ObjectHideFlags: 0

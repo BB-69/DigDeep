@@ -25,7 +25,7 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] int minSteps;
     [SerializeField] int maxSteps;
     [SerializeField] float copperChance, ironChance, goldChance, emeraldChance;
-    int copperCount, ironCount, goldCount, emeraldCount =0;
+    int copperCount, ironCount, goldCount, emeraldCount = 0;
     bool isFirstTimeGenerate = true;
     [ContextMenu("Regenerate Cave")]
     public void Regenerate()
@@ -50,11 +50,11 @@ public class DungeonManager : MonoBehaviour
         else { Destroy(this.gameObject); }
         tileLib = GetComponent<TileLib>();
         checkpointGenerator = GetComponent<CheckpointGenerator>();
-        
+
     }
 
     #region DUNGEON SETUP
-    public void SetValue(float copperChance=5f, float ironChance=2f, float goldChance=0f, float emeraldChance=0f)
+    public void SetValue(float copperChance = 5f, float ironChance = 2f, float goldChance = 0f, float emeraldChance = 0f)
     {
         this.copperChance = copperChance;
         this.ironChance = ironChance;
@@ -91,7 +91,7 @@ public class DungeonManager : MonoBehaviour
         Debug.Log(goldCount);
         Debug.Log(emeraldCount);
         Debug.Log(playerPos);
-        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[] { copperCount, ironCount, goldCount, emeraldCount });
+        checkpointGenerator.SpawnCheckpointObject(startingPoints, new int[] { copperCount/2, ironCount/2, goldCount/2, emeraldCount });
         if (currentPlayer == null)
             currentPlayer = Instantiate(playerGO, playerPos, Quaternion.identity);
         else currentPlayer.transform.position = playerPos;
@@ -179,14 +179,14 @@ public class DungeonManager : MonoBehaviour
     void PlaceTileset(BlockType[,] grid)
     {
         Dictionary<BlockType, TileBase> tileCache = new()
-    {
-        [BlockType.Empty] = tileLib.GetTile("Empty"),
-        [BlockType.Normal] = tileLib.GetTile("Wall"),
-        [BlockType.Copper] = tileLib.GetTile("CopperOre"),
-        [BlockType.Iron] = tileLib.GetTile("IronOre"),
-        [BlockType.Gold] = tileLib.GetTile("GoldOre"),
-        [BlockType.Emerald] = tileLib.GetTile("EmeraldOre")
-    };
+        {
+            [BlockType.Empty] = tileLib.GetTile("Empty"),
+            [BlockType.Normal] = tileLib.GetTile("Wall"),
+            [BlockType.Copper] = tileLib.GetTile("CopperOre"),
+            [BlockType.Iron] = tileLib.GetTile("IronOre"),
+            [BlockType.Gold] = tileLib.GetTile("GoldOre"),
+            [BlockType.Emerald] = tileLib.GetTile("EmeraldOre")
+        };
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
@@ -235,11 +235,18 @@ public class DungeonManager : MonoBehaviour
 
     public void TakeDamageBlock(Vector3Int pos, int dmg)
     {
-        blocks[pos].hp -= dmg;
-        if (blocks[pos].hp <= 0)
+        if (blocks.TryGetValue(pos, out var block) && block.canDig)
         {
-            DigTile(pos);
+            if (block.hp <= 0) return; // Block already destroyed
+            if (block.blockType == BlockType.Empty) return; // Cannot damage empty tile
+            
+            block.hp -= dmg;
+            if (block.hp <= 0)
+            {
+                DigTile(pos);
+            }
         }
+
     }
 
     public BlockType TryGenerateOre()
@@ -298,7 +305,7 @@ public class DungeonManager : MonoBehaviour
             }
 
             tilemap.SetTile(position, tileLib.GetTile("Empty"));
-            Debug.Log(tile + "Has been destroy" +  position);
+            Debug.Log(tile + "Has been destroy" + position);
         }
         else
         {

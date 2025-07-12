@@ -18,6 +18,16 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        GameManager.OnLevelStart += ClearInventory;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnLevelStart -= ClearInventory;
+    }
+
     public void ClearInventory()
     {
         inventory.Clear();
