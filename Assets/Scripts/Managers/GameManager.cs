@@ -1,10 +1,17 @@
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] Camera mainCamera;
+    public Camera MainCamera
+    {
+        get { return mainCamera; }
+        set { mainCamera = value; }
+    }
     public static GameManager instance { get; private set; }
     [SerializeField] int checkpointPassed = 0;
     public static UnityAction OnLevelStart; //call from checkpoint
@@ -46,6 +53,7 @@ public class GameManager : MonoBehaviour
     {
         checkpointPassed++;
         UIManager.Instance.AddCheckpointText(checkpointPassed);
+        PlayerManager.instance.bombThrower.AddBomb(5);
         Debug.Log($"Complete {checkpointPassed} checkpoints");
         if (checkpointPassed == 4)
         {
@@ -63,11 +71,19 @@ public class GameManager : MonoBehaviour
         ChangeToNextLevel();
     }
 
-    public void ChangeToNextLevel()
+    public void ResetLevel()
+    {
+        isStarted = false;
+        timer = 0;
+        ChangeToNextLevel(true);
+    }
+
+    public void ChangeToNextLevel(bool isReset = false)
     {
         checkpointPassed = 0;
+        if(!isReset)
+            level++;
         OnLevelStart?.Invoke();
-        level++;
         if (level <= 3)
         {
             timeLimit = 240f;
@@ -93,6 +109,7 @@ public class GameManager : MonoBehaviour
     {
         isStarted = false;
         PlayerManager.instance.playerMovement.canMove = false;
+        ResetButton.Instance.canPress = false;
         UIManager.Instance.ShowLoseUI();
         Debug.Log("You lose!");
     }

@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     public Inventory inventory { get; private set; }
     public float xp { get;  private set; }
     IInteractable interactableObj;
+    public BombThrower bombThrower;
     void Awake()
     {
         if(instance == null)
@@ -58,6 +59,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Interactable"))
         {
+            Debug.Log(collision.gameObject.name);
             interactableObj = collision.GetComponent<IInteractable>();
             interactableObj.OnEnterInteractRange();
         }

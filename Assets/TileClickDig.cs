@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps;
 
 public class TileClickDig : MonoBehaviour
 {
+    public int damage;
     public Transform player;
     public GameObject pickaxe; // ตัว Pickaxe ที่มี Animator
     public float maxDistance = 5f;
@@ -43,18 +44,16 @@ public class TileClickDig : MonoBehaviour
             Vector3 cellCenter = DungeonManager.instance.tilemap.GetCellCenterWorld(cellPos);
 
             float distance = Vector3.Distance(player.position, cellCenter);
-            Debug.Log("Mouse Position (Screen): " + Input.mousePosition);
-            Debug.Log("Mouse World Position: " + mouseWorldPos);
-            Debug.Log("Tile Cell Clicked: " + cellPos);
+
             if (distance <= maxDistance)
             {
                 StartCoroutine(SwingPickaxe(cellCenter));
-                DungeonManager.instance.TakeDamageBlock(cellPos, 15);
-                Debug.Log("Dealing damage to block");
+                DungeonManager.instance.TakeDamageBlock(cellPos, 25);
+
             }
             else
             {
-                Debug.Log("Too far to dig");
+
             }
         }
     }

@@ -10,13 +10,11 @@ public class PlayerMovement : MonoBehaviour
     public int maxJump = 2, jumpCount = 0;
 
     public LayerMask groundLayer;
-
-    public Bomb LaunchableProjectile;
-
     public Transform LaunchOffset, groundCheckPoint;
 
     private bool isDashing = false, wasGroundedLastFrame = false;
-    private Vector2 Charactor;
+    public float fallMultiplier = 2.5f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -27,11 +25,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if(!canMove) return;
         
-        MoveX = Input.GetAxis("Horizontal");
-        transform.position += new Vector3(MoveX, 0, 0) * Time.deltaTime * MoveSpeed;
+        if (transform.position.y < -20f)
+        {
+            canMove = false;
+            GameManager.instance.LoseGame();
+        }
 
-        if (!Mathf.Approximately(0, MoveX))
-            transform.rotation = MoveX > 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+        MoveX = Input.GetAxis("Horizontal");
 
         bool isGrounded = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
 
@@ -45,41 +45,42 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(new Vector2(0, JumpForce), ForceMode2D.Impulse);
             jumpCount++;
             Debug.Log(jumpCount);
-
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)// walk or dash
         {
             StartCoroutine(Dash());
         }
-/*
-        if (Input.GetButtonDown("Fire1")) //shoot bomb
-        {
-
-
-            Instantiate(LaunchableProjectile, LaunchOffset.position, LaunchOffset.rotation);
-        }*/
 
     }
     private void FixedUpdate()
     {
         if (!isDashing)
         {
-            rb.linearVelocity = new Vector2(MoveX * MoveSpeed, rb.linearVelocity.y); // Normal walk 
+            rb.linearVelocity = new Vector2(MoveX * MoveSpeed, rb.linearVelocity.y); // Only set X velocity
+        }
+        // Apply extra gravity when falling
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.AddForce(Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * rb.mass);
         }
     }
     System.Collections.IEnumerator Dash()
     {
         isDashing = true;
 
-        float dashTime = 0f;
-        while (dashTime < dashDuration)
-        {
-            transform.position += new Vector3(MoveX, 0, 0) * dashSpeed * Time.deltaTime;
-            dashTime += Time.deltaTime;
-            yield return null;
-        }
+        float dashX = Input.GetAxis("Horizontal");
+        float dashY = Input.GetAxis("Vertical");
+        Vector2 dashDir = new Vector2(dashX, dashY).normalized;
 
+        if (dashDir == Vector2.zero)
+            dashDir = new Vector2(MoveX, 0).normalized;
+
+        rb.linearVelocity = dashDir * dashSpeed;
+
+        yield return new WaitForSeconds(dashDuration);
+
+        rb.linearVelocity = new Vector2(MoveX * MoveSpeed, rb.linearVelocityY); // Restore normal movement
         isDashing = false;
     }
 }
