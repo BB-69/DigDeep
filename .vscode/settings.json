@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "GAMEJAMCS_KMITL_ALPHAWOLF.sln"
+    "dotnet.defaultSolution": "DigDeep.sln"
 }
